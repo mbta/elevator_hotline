@@ -1,0 +1,8 @@
+{
+  "lambda": {
+    "role": "lambda-elevator-hotline-role",
+    "name": "mbta-elevator-hotline",
+    "region": "us-east-1",
+    "sharedRole": true
+  }
+}

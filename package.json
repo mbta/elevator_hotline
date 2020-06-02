@@ -1,0 +1,23 @@
+{
+  "name": "elevator-hotline",
+  "version": "1.0.0",
+  "description": "Lambda for Amazon Connect to provide access information to the riders",
+  "main": "src/index.js",
+  "scripts": {
+    "deploy": "claudia update --no-optional-dependencies",
+    "lambda": "claudia test-lambda",
+    "local": "node test/local.js",
+    "prettier": "prettier --write src test index.js",
+    "test": "jest --setupFiles ./.env --silent"
+  },
+  "author": "Matthew O'Gorman <mog@rldn.net>",
+  "license": "MIT",
+  "devDependencies": {
+    "aws-lambda-pify": "^3.0.0",
+    "claudia": "^5.12.0",
+    "dotenv": "^8.2.0",
+    "jest": "^26.0.1",
+    "prettier": "2.0.5"
+  },
+  "dependencies": {}
+}
