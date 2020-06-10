@@ -4,23 +4,17 @@ const pify = require("aws-lambda-pify");
 
 const api_client = require("../src/api_client.js");
 const no_outages = {
-  blue:
-    "<speak>Currently there are no outages reported for the  blue line </speak>",
-  commuter:
-    "<speak>Currently there are no outages reported for the  commuter rail </speak>",
-  green:
-    "<speak>Currently there are no outages reported for the  green line </speak>",
-  orange:
-    "<speak>Currently there are no outages reported for the  orange line </speak>",
-  red:
-    "<speak>Currently there are no outages reported for the  red line </speak>",
-  silver:
-    "<speak>Currently there are no outages reported for the  silver line </speak>",
+  blue: "Currently there are no outages reported for the  blue line ",
+  commuter: "Currently there are no outages reported for the  commuter rail ",
+  green: "Currently there are no outages reported for the  green line ",
+  orange: "Currently there are no outages reported for the  orange line ",
+  red: "Currently there are no outages reported for the  red line ",
+  silver: "Currently there are no outages reported for the  silver line ",
   status: 200,
 };
 
 const north_example =
-  '<speak> <emphasis> North Station </emphasis><break time="1s"/>  elevator closure Example header. example description </speak>';
+  "North Station .  elevator closure Example header. example description";
 
 test("if http client fails. lambda returns back a status 500", () => {
   const spy = jest
@@ -149,9 +143,9 @@ test("render multiple alerts across multiple lines", () => {
       blue: no_outages.blue,
       commuter: no_outages.commuter,
       green:
-        '<speak> <emphasis> North Station </emphasis><break time="1s"/>  elevator closure Example header3. example description3 elevator closure Example header. example description <emphasis> Symphony </emphasis><break time="1s"/>  elevator closure Example header2. example description2 </speak>',
+        "North Station .  elevator closure Example header3. example description3 elevator closure Example header. example description. Symphony .  elevator closure Example header2. example description2",
       orange:
-        '<speak> <emphasis> North Station </emphasis><break time="1s"/>  elevator closure Example header3. example description3 elevator closure Example header. example description </speak>',
+        "North Station .  elevator closure Example header3. example description3 elevator closure Example header. example description",
       red: no_outages.red,
       silver: no_outages.silver,
       status: no_outages.status,

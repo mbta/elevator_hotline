@@ -1,7 +1,10 @@
 test
-claudia.json
-hotline_ivr.json
-hotline_ivr.png
 CODE_OF_CONDUCT.md
 README.md
 LICENSE
+run_test.sh
+dev.json
+hotline_dev.json
+hotline_prod.json
+prod.json
+

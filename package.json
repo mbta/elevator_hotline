@@ -4,7 +4,8 @@
   "description": "Lambda for Amazon Connect to provide access information to the riders",
   "main": "src/index.js",
   "scripts": {
-    "deploy": "claudia update --no-optional-dependencies",
+    "deploy": "claudia update --no-optional-dependencies --config prod.json",
+    "deploy-dev": "claudia update --no-optional-dependencies --config dev.json",
     "lambda": "claudia test-lambda",
     "local": "node test/local.js",
     "prettier": "prettier --write src test index.js",
