@@ -5,7 +5,10 @@ function emptyStringIfNull(input) {
 }
 
 function cleanUpText(input) {
-  return input.replace("/", " ").replace(/\b([sS][tT])\b/g, "street");
+  return input
+    .replace("/", " ")
+    .replace(/\b([sS][tT])\b/g, "street")
+    .replace(/\r\n/g, " . ");
 }
 
 exports.get = () => {
@@ -30,6 +33,7 @@ exports.get = () => {
           const description = [
             attributes.effect.toLowerCase().replace("_", " "),
             cleanUpText(emptyStringIfNull(attributes.header)),
+            ".",
             cleanUpText(emptyStringIfNull(attributes.description)),
           ].join(" ");
 

@@ -110,7 +110,7 @@ function finalSort(data) {
         return a > b ? -1 : a < b ? 1 : 0;
       })
       .map((station) =>
-        [station.name, ". ", station.descriptions.join(" ")].join(" ")
+        [station.name, ". ", station.descriptions.join(". ")].join(" ")
       )
       .join(". ");
 

@@ -14,7 +14,7 @@ const no_outages = {
 };
 
 const north_example =
-  "North Station .  elevator closure Example header. example description";
+  "North Station .  elevator closure Example header. . example description";
 
 test("if http client fails. lambda returns back a status 500", () => {
   const spy = jest
@@ -143,9 +143,9 @@ test("render multiple alerts across multiple lines", () => {
       blue: no_outages.blue,
       commuter: no_outages.commuter,
       green:
-        "North Station .  elevator closure Example header3. example description3 elevator closure Example header. example description. Symphony .  elevator closure Example header2. example description2",
+        "North Station .  elevator closure Example header3. . example description3. elevator closure Example header. . example description. Symphony .  elevator closure Example header2. . example description2",
       orange:
-        "North Station .  elevator closure Example header3. example description3 elevator closure Example header. example description",
+        "North Station .  elevator closure Example header3. . example description3. elevator closure Example header. . example description",
       red: no_outages.red,
       silver: no_outages.silver,
       status: no_outages.status,
@@ -196,7 +196,7 @@ test("warn on unmatched alert, but still return correctly", () => {
   const fn = pify(lambda.handler);
   return fn({}).then((result) => {
     expect(console.log).toHaveBeenCalledWith(
-      'Error: Alert for a station not in routes {"id":"338974","description":"escalator closure Example header. example description","stations":["place-south"],"updatedAt":1575039547000}'
+      'Error: Alert for a station not in routes {"id":"338974","description":"escalator closure Example header. . example description","stations":["place-south"],"updatedAt":1575039547000}'
     );
     expect(result).toStrictEqual(no_outages);
   });
