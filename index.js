@@ -7,7 +7,7 @@ function initHandler(lambdaHandler) {
   if (process.env.NODE_ENV !== "prod" && process.env.NODE_ENV !== "dev") {
     require("dotenv").config();
   }
-  const dsn = process.env.SENTRY;
+  const dsn = process.env.SENTRY_DSN;
   Sentry.init({ dsn: dsn });
 
   return async (event, context) => {
