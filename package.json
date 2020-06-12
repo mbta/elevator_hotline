@@ -4,8 +4,8 @@
   "description": "Lambda for Amazon Connect to provide access information to the riders",
   "main": "src/index.js",
   "scripts": {
-    "deploy": "claudia update --no-optional-dependencies --config prod.json",
-    "deploy-dev": "claudia update --no-optional-dependencies --config dev.json",
+    "deploy": "claudia update --no-optional-dependencies --config prod.json --update-env NODE_ENV=prod",
+    "deploy-dev": "claudia update --no-optional-dependencies --config dev.json --update-env NODE_ENV=dev",
     "lambda": "claudia test-lambda",
     "local": "node test/local.js",
     "prettier": "prettier --write src test index.js",
@@ -23,7 +23,10 @@
     "codecov": "^3.7.0",
     "dotenv": "^8.2.0",
     "jest": "^26.0.1",
+    "lintint": "0.0.8",
     "prettier": "2.0.5"
   },
-  "dependencies": {}
+  "dependencies": {
+    "@sentry/node": "^5.17.0"
+  }
 }
