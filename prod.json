@@ -1,7 +1,7 @@
 {
   "lambda": {
     "role": "lambda-elevator-hotline-role",
-    "name": "mbta-elevator-hotline",
+    "name": "elevator-hotline-prod",
     "region": "us-east-1",
     "sharedRole": true
   }

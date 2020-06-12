@@ -12,7 +12,7 @@ function getLine(line) {
 }
 
 function defaultMessage(line) {
-  return [config("OPERATIONAL_MESSAGE"), line, "</speak>"].join(" ");
+  return [config("OPERATIONAL_MESSAGE"), line, ""].join(" ");
 }
 
 function mergeAlertsAndStationsData(responses) {
@@ -94,9 +94,9 @@ function finalSort(data) {
   const defaults = {
     status: 200,
     red: defaultMessage("red line"),
-    blue: defaultMessage("blue line"),
     orange: defaultMessage("orange line"),
     green: defaultMessage("green line"),
+    blue: defaultMessage("blue line"),
     silver: defaultMessage("silver line"),
     commuter: defaultMessage("commuter rail"),
   };
@@ -110,17 +110,12 @@ function finalSort(data) {
         return a > b ? -1 : a < b ? 1 : 0;
       })
       .map((station) =>
-        [
-          "<emphasis>",
-          station.name,
-          '</emphasis><break time="1s"/> ',
-          station.descriptions.join(" "),
-        ].join(" ")
+        [station.name, ". ", station.descriptions.join(". ")].join(" ")
       )
-      .join(" ");
+      .join(". ");
 
     if (line_alerts !== "") {
-      acc[line] = ["<speak>", line_alerts, "</speak>"].join(" ");
+      acc[line] = line_alerts;
     }
     return acc;
   }, defaults);
@@ -131,9 +126,9 @@ exports.run = function (event, context) {
   const requests = [
     alerts.get(),
     stations.get("red", getLine("LINE_RED")),
-    stations.get("blue", getLine("LINE_BLUE")),
     stations.get("orange", getLine("LINE_ORANGE")),
     stations.get("green", getLine("LINE_GREEN")),
+    stations.get("blue", getLine("LINE_BLUE")),
     stations.get("silver", getLine("LINE_SILVER")),
     stations.get("commuter", getLine("LINE_COMMUTER")),
   ];
