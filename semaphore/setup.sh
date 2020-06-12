@@ -1,3 +1,3 @@
 #!/usr/bin/env bash
-apt-get install npm
+apt-get -y install npm
 npm install
