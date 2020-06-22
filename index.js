@@ -12,8 +12,10 @@ function initHandler(lambdaHandler) {
 
   return async (event, context) => {
     try {
+      console.log("WORK");
       return await lambdaHandler(event, context);
     } catch (error) {
+      console.log("WORKWORK");
       Sentry.captureException(error);
       await Sentry.flush(2000);
     }

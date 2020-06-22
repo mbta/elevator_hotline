@@ -1,148 +1,142 @@
 const alerts = require("./alerts.js");
-const stations = require("./stations.js");
+const routes = require("./routes.js");
 
 function config(item) {
   return process.env[item];
 }
 
-function getLine(line) {
+function getLine(line, line_id) {
   return config(line)
     .split(",")
-    .map((item) => item.trim());
+    .map((item) => {
+      return { line: item.trim(), id: line_id };
+    });
 }
 
 function defaultMessage(line) {
-  return [config("OPERATIONAL_MESSAGE"), line, ""].join(" ");
+  return ["<speak>", config("OPERATIONAL_MESSAGE"), line, "</speak>"].join(" ");
 }
 
-function mergeAlertsAndStationsData(responses) {
-  return responses.reduce(
-    (acc, response) => {
-      if (response.id === "alerts") {
-        if (response.alerts.length == 0) {
-          console.log(
-            "Error: alerts returned no alerts when called, probably a problem."
-          );
-        }
-        acc.alerts = response.alerts;
+function lifecycle_order(lifecycle) {
+  if (lifecycle == "ONGOING") return 4;
+  if (lifecycle == "ONGOING_UPCOMING") return 3;
+  if (lifecycle == "NEW") return 2;
+  if (lifecycle == "UPCOMING") return 1;
+  return 0;
+}
+
+function type_order(type) {
+  if (type == "elevator closure") return 3;
+  if (type == "escelator closure") return 2;
+  if (type == "access issue") return 1;
+  return 0;
+}
+
+function compare_types(a, b) {
+  if (type_order(a.type) > type_order(b.type)) {
+    return -1;
+  } else if (type_order(a.type) < type_order(b.type)) {
+    return 1;
+  } else {
+    if (lifecycle_order(a.lifecycle) > lifecycle_order(b.lifecycle)) {
+      return -1;
+    } else if (lifecycle_order(a.lifecycle) < lifecycle_order(b.lifecycle)) {
+      return 1;
+    } else {
+      if (a.updatedAt > b.updatedAt) {
+        return -1;
+      } else if (b.updatedAt > a.updatedAt) {
+        return 1;
       } else {
-        if (response.stations.length == 0) {
-          console.log(
-            "Error: " + response.id + " returned no stations when called."
-          );
-        }
-        response.stations.map((station) => {
-          if (!(station.id in acc.stations)) {
-            acc.stations[station.id] = [];
-          }
-          acc.stations[station.id].push({
-            line: response.id,
-            name: station.name,
-          });
-        });
-      }
-      return acc;
-    },
-    { stations: {} }
-  );
-}
-
-function groupAlertsByLineAndStation(data) {
-  // Sort alerts to line and specific station. Put multiple alerts for a station into one object
-  // alerts are sorted by date newest first.
-  const processed = data.alerts.reduce((acc, alert) => {
-    for (var i = 0; i < alert.stations.length; i++) {
-      if (alert.stations[i] in data.stations) {
-        alert.found = true;
-        data.stations[alert.stations[i]].map((station) => {
-          const line = station.line;
-          if (!(line in acc)) {
-            acc[line] = {};
-          }
-          if (!(station.name in acc[line])) {
-            acc[line][station.name] = {
-              line: line,
-              name: station.name,
-              descriptions: [alert.description],
-              updatedAt: alert.updatedAt,
-            };
-          } else {
-            if (acc[line][station.name].updatedAt > alert.updatedAt) {
-              acc[line][station.name].descriptions.push(alert.description);
-            } else {
-              acc[line][station.name].descriptions.unshift(alert.description);
-              acc[line][station.name].updatedAt = alert.updatedAt;
-            }
-          }
-        });
+        return 0;
       }
     }
-    return acc;
-  }, {});
-
-  data.alerts.map((alert) => {
-    if (alert.found != true) {
-      console.log(
-        "Error: Alert for a station not in routes " + JSON.stringify(alert)
-      );
-    }
-  });
-  return processed;
-}
-
-function finalSort(data) {
-  const defaults = {
-    status: 200,
-    red: defaultMessage("red line"),
-    orange: defaultMessage("orange line"),
-    green: defaultMessage("green line"),
-    blue: defaultMessage("blue line"),
-    silver: defaultMessage("silver line"),
-    commuter: defaultMessage("commuter rail"),
-  };
-
-  // Sort alerts for a line by date and format final output
-  return Object.keys(data).reduce((acc, line) => {
-    const line_alerts = Object.values(data[line])
-      .sort((a, b) => {
-        a = a.updatedAt;
-        b = b.updatedAt;
-        return a > b ? -1 : a < b ? 1 : 0;
-      })
-      .map((station) =>
-        [station.name, ". ", station.descriptions.join(". ")].join(" ")
-      )
-      .join(". ");
-
-    if (line_alerts !== "") {
-      acc[line] = line_alerts;
-    }
-    return acc;
-  }, defaults);
+  }
 }
 
 exports.run = function (event, context) {
   const operational = config("OPERATIONAL_MESSAGE");
-  const requests = [
-    alerts.get(),
-    stations.get("red", getLine("LINE_RED")),
-    stations.get("orange", getLine("LINE_ORANGE")),
-    stations.get("green", getLine("LINE_GREEN")),
-    stations.get("blue", getLine("LINE_BLUE")),
-    stations.get("silver", getLine("LINE_SILVER")),
-    stations.get("commuter", getLine("LINE_COMMUTER")),
-  ];
+  const route_ids = [
+    getLine("LINE_RED", "red"),
+    getLine("LINE_ORANGE", "orange"),
+    getLine("LINE_GREEN", "green"),
+    getLine("LINE_BLUE", "blue"),
+    getLine("LINE_SILVER", "silver"),
+    getLine("LINE_COMMUTER", "commuter"),
+  ].reduce((acc, val) => [...acc, ...val], []);
 
-  return Promise.all(requests)
-    .then((responses) => {
-      const mbtaData = mergeAlertsAndStationsData(responses);
-      const groupData = groupAlertsByLineAndStation(mbtaData);
-      const output = finalSort(groupData);
+  const routes_table = route_ids.reduce((acc, route) => {
+    acc[route.line] = route.id;
+    return acc;
+  }, {});
 
+  return alerts.get(config("API_KEY")).then((alertsResponse) => {
+    const requests = alertsResponse.entities.map((entity) =>
+      routes.get(config("API_KEY"), entity)
+    );
+    return Promise.all(requests).then((requests) => {
+      const stops = requests.reduce((acc, response) => {
+        acc[response.stop] = {
+          name: response.name,
+          routes: response.routes.map((route) => routes_table[route]),
+        };
+        return acc;
+      }, {});
+
+      const lines = alertsResponse.alerts.reduce(
+        (acc, alert) => {
+          alert.station = alert.entities.find((entity) => {
+            return stops[entity].routes.length != 0;
+          });
+
+          alert.name = stops[alert.station].name;
+          stops[alert.station].routes.map((route) => acc[route].push(alert));
+
+          return acc;
+        },
+        {
+          red: [],
+          orange: [],
+          green: [],
+          blue: [],
+          silver: [],
+          commuter: [],
+        }
+      );
+      let output = {
+        status: 200,
+        red: defaultMessage("red line"),
+        orange: defaultMessage("orange line"),
+        green: defaultMessage("green line"),
+        blue: defaultMessage("blue line"),
+        silver: defaultMessage("silver line"),
+        commuter: defaultMessage("commuter rail"),
+      };
+      Object.keys(lines).map((line) => {
+        lines[line].sort((a, b) => compare_types(a, b));
+        if (lines[line].length != 0) {
+          output[line] = "<speak>";
+        }
+        lines[line].map(
+          (alert) =>
+            (output[line] = [
+              output[line],
+              '<emphasis level="moderate"> ',
+              alert.name,
+              " </emphasis> ",
+              alert.lifecycle.toLowerCase(),
+              " ",
+              alert.type,
+              ' <break time="1s"/> ',
+              alert.description,
+            ].join(""))
+        );
+        if (lines[line].length != 0) {
+          output[line] = output[line] + " </speak>";
+        }
+      });
       context.succeed(output);
-    })
-    .catch((error) => {
-      console.log("Error: " + error);
-      context.succeed({ status: 500 });
+      return output;
     });
+  });
 };
