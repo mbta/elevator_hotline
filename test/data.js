@@ -53,38 +53,6 @@ const symphony = {
   type: "stop",
 };
 
-exports.commuter = function () {
-  return process.env.LINE_COMMUTER.split(",")
-    .map((item) => item.trim())
-    .join(",");
-};
-exports.silver = function () {
-  return process.env.LINE_SILVER.split(",")
-    .map((item) => item.trim())
-    .join(",");
-};
-exports.blue = function () {
-  return process.env.LINE_BLUE.split(",")
-    .map((item) => item.trim())
-    .join(",");
-};
-exports.orange = function () {
-  return process.env.LINE_ORANGE.split(",")
-    .map((item) => item.trim())
-    .join(",");
-};
-exports.red = function () {
-  return process.env.LINE_RED.split(",")
-    .map((item) => item.trim())
-    .join(",");
-};
-
-exports.green = function () {
-  return process.env.LINE_GREEN.split(",")
-    .map((item) => item.trim())
-    .join(",");
-};
-
 exports.no_alerts = function () {
   return {
     data: [],
