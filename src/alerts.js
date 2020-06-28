@@ -61,6 +61,11 @@ exports.get = (apiKey) => {
           updatedAt: new Date(attributes.updated_at).getTime(),
         };
       });
+    if (alerts.length == 0) {
+      console.log(
+        "Error: alerts returned no alerts when called, probably a problem."
+      );
+    }
     return {
       id: "alerts",
       alerts: alerts,

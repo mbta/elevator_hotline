@@ -27,9 +27,8 @@ function lifecycle_order(lifecycle) {
 
 function type_order(type) {
   if (type == "elevator closure") return 3;
-  if (type == "escelator closure") return 2;
+  if (type == "escalator closure") return 2;
   if (type == "access issue") return 1;
-  return 0;
 }
 
 function compare_types(a, b) {
@@ -78,7 +77,12 @@ exports.run = function (event, context) {
       const stops = requests.reduce((acc, response) => {
         acc[response.stop] = {
           name: response.name,
-          routes: response.routes.map((route) => routes_table[route]),
+          routes: Object.keys(
+            response.routes.reduce((acc, route) => {
+              acc[routes_table[route]] = true;
+              return acc;
+            }, {})
+          ),
         };
         return acc;
       }, {});
@@ -88,10 +92,15 @@ exports.run = function (event, context) {
           alert.station = alert.entities.find((entity) => {
             return stops[entity].routes.length != 0;
           });
-
-          alert.name = stops[alert.station].name;
-          stops[alert.station].routes.map((route) => acc[route].push(alert));
-
+          if (stops[alert.station]) {
+            alert.name = stops[alert.station].name;
+            stops[alert.station].routes.map((route) => acc[route].push(alert));
+          } else {
+            console.log(
+              "Error: Alert for a station not in routes " +
+                JSON.stringify(alert)
+            );
+          }
           return acc;
         },
         {
@@ -103,6 +112,7 @@ exports.run = function (event, context) {
           commuter: [],
         }
       );
+
       let output = {
         status: 200,
         red: defaultMessage("red line"),

@@ -9,7 +9,7 @@
     "lambda": "claudia test-lambda",
     "local": "node test/local.js",
     "prettier": "prettier --write src test index.js",
-    "test": "jest --setupFiles ./.env --silent && codecov"
+    "test": "jest --setupFiles ./.env && codecov"
   },
   "jest": {
     "coverageDirectory": "./coverage/",
