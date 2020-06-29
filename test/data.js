@@ -53,38 +53,6 @@ const symphony = {
   type: "stop",
 };
 
-exports.commuter = function () {
-  return process.env.LINE_COMMUTER.split(",")
-    .map((item) => item.trim())
-    .join(",");
-};
-exports.silver = function () {
-  return process.env.LINE_SILVER.split(",")
-    .map((item) => item.trim())
-    .join(",");
-};
-exports.blue = function () {
-  return process.env.LINE_BLUE.split(",")
-    .map((item) => item.trim())
-    .join(",");
-};
-exports.orange = function () {
-  return process.env.LINE_ORANGE.split(",")
-    .map((item) => item.trim())
-    .join(",");
-};
-exports.red = function () {
-  return process.env.LINE_RED.split(",")
-    .map((item) => item.trim())
-    .join(",");
-};
-
-exports.green = function () {
-  return process.env.LINE_GREEN.split(",")
-    .map((item) => item.trim())
-    .join(",");
-};
-
 exports.no_alerts = function () {
   return {
     data: [],
@@ -112,6 +80,11 @@ exports.one_alert = function () {
           effect: "ELEVATOR_CLOSURE",
           header: "Example header.",
           informed_entity: [
+            {
+              activities: ["USING_WHEELCHAIR"],
+              facility: "850",
+              stop: "70104",
+            },
             {
               activities: ["USING_WHEELCHAIR"],
               facility: "850",
@@ -278,17 +251,166 @@ exports.many_alerts = function () {
           banner: null,
           cause: "UNKNOWN_CAUSE",
           created_at: "2019-10-21T16:59:16-04:00",
-          description: "example description2",
+          description: "example description",
           effect: "ELEVATOR_CLOSURE",
+          header: "Example header.",
+          informed_entity: [
+            {
+              activities: ["USING_WHEELCHAIR"],
+              facility: "850",
+              stop: "70104",
+            },
+          ],
+          lifecycle: "ONGOING",
+          service_effect: "elevator unavailable",
+          severity: 1,
+          short_header: "short header.",
+          timeframe: "ongoing",
+          updated_at: "2019-12-29T09:59:07-05:00",
+          url: null,
+        },
+        id: "338973",
+        links: {
+          self: "/alerts/338973",
+        },
+        type: "alert",
+      },
+    ],
+    jsonapi: {
+      version: "1.0",
+    },
+  };
+};
+
+exports.many_alerts_for_sort = function () {
+  return {
+    data: [
+      {
+        attributes: {
+          active_period: [
+            {
+              end: null,
+              start: "2019-11-12T04:30:00-05:00",
+            },
+          ],
+          banner: null,
+          cause: "UNKNOWN_CAUSE",
+          created_at: "2019-10-21T16:59:16-04:00",
+          description: "example description",
+          effect: "ELEVATOR_CLOSURE",
+          informed_entity: [
+            {
+              activities: ["USING_WHEELCHAIR"],
+              facility: "850",
+              stop: "place-north",
+            },
+          ],
+          lifecycle: "ONGOING",
+          service_effect: "elevator unavailable",
+          severity: 1,
+          short_header: "short header.",
+          timeframe: "ongoing",
+          updated_at: "2019-11-29T09:59:07-05:00",
+          url: null,
+        },
+        id: "338973",
+        links: {
+          self: "/alerts/338973",
+        },
+        type: "alert",
+      },
+      {
+        attributes: {
+          active_period: [
+            {
+              end: null,
+              start: "2019-11-12T04:30:00-05:00",
+            },
+          ],
+          banner: null,
+          cause: "UNKNOWN_CAUSE",
+          created_at: "2019-10-21T16:59:16-04:00",
+          description: "example description",
+          effect: "ELEVATOR_CLOSURE",
+          header: "Example header.",
+          informed_entity: [
+            {
+              activities: ["USING_WHEELCHAIR"],
+              facility: "850",
+              stop: "70104",
+            },
+          ],
+          lifecycle: "ONGOING",
+          service_effect: "elevator unavailable",
+          severity: 1,
+          short_header: "short header.",
+          timeframe: "ongoing",
+          updated_at: "2019-12-29T09:59:07-05:00",
+          url: null,
+        },
+        id: "338973",
+        links: {
+          self: "/alerts/338973",
+        },
+        type: "alert",
+      },
+      {
+        attributes: {
+          active_period: [
+            {
+              end: null,
+              start: "2019-11-12T04:30:00-05:00",
+            },
+          ],
+          banner: null,
+          cause: "UNKNOWN_CAUSE",
+          created_at: "2019-10-21T17:59:16-04:00",
+          description: "example description5",
+          effect: "ELEVATOR_CLOSURE",
+          header: "Example header5.",
+          informed_entity: [
+            {
+              activities: ["USING_WHEELCHAIR"],
+              facility: "850",
+              stop: "70104",
+            },
+          ],
+          lifecycle: "ONGOING",
+          service_effect: "elevator unavailable",
+          severity: 1,
+          short_header: "short header5.",
+          timeframe: "ongoing",
+          updated_at: "2019-12-29T09:59:07-05:00",
+          url: null,
+        },
+        id: "338973",
+        links: {
+          self: "/alerts/338973",
+        },
+        type: "alert",
+      },
+      {
+        attributes: {
+          active_period: [
+            {
+              end: null,
+              start: "2019-11-12T04:30:00-05:00",
+            },
+          ],
+          banner: null,
+          cause: "UNKNOWN_CAUSE",
+          created_at: "2019-10-21T16:59:16-04:00",
+          description: "example description2",
+          effect: "ESCALATOR_CLOSURE",
           header: "Example header2.",
           informed_entity: [
             {
               activities: ["USING_WHEELCHAIR"],
               facility: "850",
-              stop: "place-symcl",
+              stop: "70105",
             },
           ],
-          lifecycle: "ONGOING",
+          lifecycle: "ONGOING_UPCOMING",
           service_effect: "elevator unavailable",
           severity: 1,
           short_header: "short header2.",
@@ -314,21 +436,21 @@ exports.many_alerts = function () {
           cause: "UNKNOWN_CAUSE",
           created_at: "2019-10-21T16:59:16-04:00",
           description: "example description3",
-          effect: "ELEVATOR_CLOSURE",
+          effect: "ACCESS_ISSUE",
           header: "Example header3.",
           informed_entity: [
             {
               activities: ["USING_WHEELCHAIR"],
               facility: "850",
-              stop: "place-north",
+              stop: "70105",
             },
           ],
-          lifecycle: "ONGOING",
+          lifecycle: "ONGOING_UPCOMING",
           service_effect: "elevator unavailable",
           severity: 1,
           short_header: "short header3.",
           timeframe: "ongoing",
-          updated_at: "2019-13-29T09:59:07-05:00",
+          updated_at: "2019-12-29T09:59:07-05:00",
           url: null,
         },
         id: "338973",
@@ -344,27 +466,250 @@ exports.many_alerts = function () {
   };
 };
 
-exports.no_route = function () {
+exports.no_station = () => {
   return {
     data: [],
+    included: [],
+    jsonapi: {
+      version: "1.0",
+    },
+  };
+};
+exports.north_station = () => {
+  return {
+    data: [
+      {
+        attributes: {},
+        id: "Orange",
+        links: {
+          self: "/routes/Orange",
+        },
+        relationships: {
+          line: {
+            data: {
+              id: "line-Orange",
+              type: "line",
+            },
+          },
+          route_patterns: {},
+          stop: {
+            data: {
+              id: "place-north",
+              type: "stop",
+            },
+          },
+        },
+        type: "route",
+      },
+      {
+        attributes: {},
+        id: "Green-C",
+        links: {
+          self: "/routes/Green-C",
+        },
+        relationships: {
+          line: {
+            data: {
+              id: "line-Green",
+              type: "line",
+            },
+          },
+          route_patterns: {},
+          stop: {
+            data: {
+              id: "place-north",
+              type: "stop",
+            },
+          },
+        },
+        type: "route",
+      },
+      {
+        attributes: {},
+        id: "Green-E",
+        links: {
+          self: "/routes/Green-E",
+        },
+        relationships: {
+          line: {
+            data: {
+              id: "line-Green",
+              type: "line",
+            },
+          },
+          route_patterns: {},
+          stop: {
+            data: {
+              id: "place-north",
+              type: "stop",
+            },
+          },
+        },
+        type: "route",
+      },
+    ],
+    included: [
+      {
+        attributes: {
+          name: "North Station",
+        },
+        id: "place-north",
+        links: {
+          self: "/stops/place-north",
+        },
+        relationships: {
+          child_stops: {},
+          facilities: {
+            links: {
+              related: "/facilities/?filter[stop]=place-north",
+            },
+          },
+          parent_station: {
+            data: null,
+          },
+          recommended_transfers: {},
+          zone: {
+            data: {
+              id: "CR-zone-1A",
+              type: "zone",
+            },
+          },
+        },
+        type: "stop",
+      },
+    ],
     jsonapi: {
       version: "1.0",
     },
   };
 };
 
-exports.green_route = function () {
+exports.quincy_center = () => {
   return {
-    data: [north_station, symphony],
+    data: [
+      {
+        attributes: {},
+        id: "Red",
+        links: {
+          self: "/routes/Red",
+        },
+        relationships: {
+          line: {
+            data: {
+              id: "line-Red",
+              type: "line",
+            },
+          },
+          route_patterns: {},
+          stop: {
+            data: {
+              id: "70105",
+              type: "stop",
+            },
+          },
+        },
+        type: "route",
+      },
+    ],
+    included: [
+      {
+        attributes: {
+          name: "Quincy Center",
+        },
+        id: "70105",
+        links: {
+          self: "/stops/70105",
+        },
+        relationships: {
+          child_stops: {},
+          facilities: {
+            links: {
+              related: "/facilities/?filter[stop]=70105",
+            },
+          },
+          parent_station: {
+            data: {
+              id: "place-qamnl",
+              type: "stop",
+            },
+          },
+          recommended_transfers: {},
+          zone: {
+            data: {
+              id: "RapidTransit",
+              type: "zone",
+            },
+          },
+        },
+        type: "stop",
+      },
+    ],
     jsonapi: {
       version: "1.0",
     },
   };
 };
 
-exports.orange_route = function () {
+exports.quincy_adams = () => {
   return {
-    data: [north_station],
+    data: [
+      {
+        attributes: {},
+        id: "Red",
+        links: {
+          self: "/routes/Red",
+        },
+        relationships: {
+          line: {
+            data: {
+              id: "line-Red",
+              type: "line",
+            },
+          },
+          route_patterns: {},
+          stop: {
+            data: {
+              id: "70104",
+              type: "stop",
+            },
+          },
+        },
+        type: "route",
+      },
+    ],
+    included: [
+      {
+        attributes: {
+          name: "Quincy Adams",
+        },
+        id: "70104",
+        links: {
+          self: "/stops/70104",
+        },
+        relationships: {
+          child_stops: {},
+          facilities: {
+            links: {
+              related: "/facilities/?filter[stop]=70104",
+            },
+          },
+          parent_station: {
+            data: {
+              id: "place-qamnl",
+              type: "stop",
+            },
+          },
+          recommended_transfers: {},
+          zone: {
+            data: {
+              id: "RapidTransit",
+              type: "zone",
+            },
+          },
+        },
+        type: "stop",
+      },
+    ],
     jsonapi: {
       version: "1.0",
     },
