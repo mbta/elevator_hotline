@@ -225,9 +225,9 @@ test("render multiple alerts across multiple lines to test sorting", () => {
       blue: no_outages.blue,
       commuter: no_outages.commuter,
       green:
-        '<speak><emphasis level="moderate"> North Station </emphasis> ongoing elevator closure <break time="1s"/>  . example description <break time="1s"/> </speak>',
+        '<speak><emphasis level="moderate"> North Station </emphasis> new elevator closure <break time="1s"/>  . example description new <break time="1s"/><emphasis level="moderate"> North Station </emphasis> ongoing elevator closure <break time="1s"/>  . example description <break time="1s"/> </speak>',
       orange:
-        '<speak><emphasis level="moderate"> North Station </emphasis> ongoing elevator closure <break time="1s"/>  . example description <break time="1s"/> </speak>',
+        '<speak><emphasis level="moderate"> North Station </emphasis> new elevator closure <break time="1s"/>  . example description new <break time="1s"/><emphasis level="moderate"> North Station </emphasis> ongoing elevator closure <break time="1s"/>  . example description <break time="1s"/> </speak>',
       red:
         '<speak><emphasis level="moderate"> Quincy Adams </emphasis> ongoing elevator closure <break time="1s"/> Example header. . example description <break time="1s"/><emphasis level="moderate"> Quincy Adams </emphasis> ongoing elevator closure <break time="1s"/> Example header5. . example description5 <break time="1s"/><emphasis level="moderate"> Quincy Center </emphasis> ongoing_upcoming escalator closure <break time="1s"/> Example header2. . example description2 <break time="1s"/><emphasis level="moderate"> Quincy Center </emphasis> ongoing_upcoming access issue <break time="1s"/> Example header3. . example description3 <break time="1s"/> </speak>',
       silver: no_outages.silver,
