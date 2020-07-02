@@ -296,6 +296,40 @@ exports.many_alerts_for_sort = function () {
           banner: null,
           cause: "UNKNOWN_CAUSE",
           created_at: "2019-10-21T16:59:16-04:00",
+          description: "example description new",
+          effect: "ELEVATOR_CLOSURE",
+          informed_entity: [
+            {
+              activities: ["USING_WHEELCHAIR"],
+              facility: "850",
+              stop: "place-north",
+            },
+          ],
+          lifecycle: "NEW",
+          service_effect: "elevator unavailable new",
+          severity: 1,
+          short_header: "short header new.",
+          timeframe: "ongoing",
+          updated_at: "2019-11-29T09:59:07-05:00",
+          url: null,
+        },
+        id: "338973",
+        links: {
+          self: "/alerts/338973",
+        },
+        type: "alert",
+      },
+      {
+        attributes: {
+          active_period: [
+            {
+              end: null,
+              start: "2019-11-12T04:30:00-05:00",
+            },
+          ],
+          banner: null,
+          cause: "UNKNOWN_CAUSE",
+          created_at: "2019-10-21T16:59:16-04:00",
           description: "example description",
           effect: "ELEVATOR_CLOSURE",
           informed_entity: [

@@ -18,9 +18,9 @@ function defaultMessage(line) {
 }
 
 function lifecycle_order(lifecycle) {
-  if (lifecycle == "ONGOING") return 4;
+  if (lifecycle == "NEW") return 4;
   if (lifecycle == "ONGOING_UPCOMING") return 3;
-  if (lifecycle == "NEW") return 2;
+  if (lifecycle == "ONGOING") return 2;
   if (lifecycle == "UPCOMING") return 1;
   return 0;
 }
