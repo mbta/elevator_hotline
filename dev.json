@@ -1,9 +1,0 @@
-{
-  "lambda": {
-    "role": "lambda-elevator-hotline-role",
-    "name": "elevator-hotline-dev",
-    "region": "us-east-1",
-    "sharedRole": true
-  }
-}
-
