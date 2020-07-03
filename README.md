@@ -27,22 +27,3 @@ then run
 npm run local
 ```
 
-to run the currently deployed lambda you can run
-
-```
-npm run lambda
-```
-
-and it will run.
-
-When you are ready to deploy the lambda you can run
-
-```
-npm run deploy-dev
-```
-
-or to deploy to prod
-
-```
-npm run deploy
-```
