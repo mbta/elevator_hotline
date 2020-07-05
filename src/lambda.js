@@ -86,15 +86,21 @@ exports.run = function (event, context) {
         };
         return acc;
       }, {});
-
       const lines = alertsResponse.alerts.reduce(
         (acc, alert) => {
           alert.station = alert.entities.find((entity) => {
-            return stops[entity].routes.length != 0;
+            if (stops[entity].routes.length != 0) {
+              return stops[entity].routes.some((route) => route in acc);
+            }
+            return false;
           });
           if (stops[alert.station]) {
             alert.name = stops[alert.station].name;
-            stops[alert.station].routes.map((route) => acc[route].push(alert));
+            stops[alert.station].routes.map((route) => {
+              if (route in acc) {
+                acc[route].push(alert);
+              }
+            });
           } else {
             console.log(
               "Error: Alert for a station not in routes " +
