@@ -211,6 +211,8 @@ test("render multiple alerts across multiple lines to test sorting", () => {
         return Promise.resolve(data.north_station());
       } else if (route == data.quincy_adams().included[0].id) {
         return Promise.resolve(data.quincy_adams());
+      } else if (route == data.nowhere().included[0].id) {
+        return Promise.resolve(data.nowhere());
       } else if (route == data.quincy_center().included[0].id) {
         return Promise.resolve(data.quincy_center());
       } else {

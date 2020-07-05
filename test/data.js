@@ -301,6 +301,11 @@ exports.many_alerts_for_sort = function () {
           informed_entity: [
             {
               activities: ["USING_WHEELCHAIR"],
+              facility: "404",
+              stop: "nowhere",
+            },
+            {
+              activities: ["USING_WHEELCHAIR"],
               facility: "850",
               stop: "place-north",
             },
@@ -725,6 +730,72 @@ exports.quincy_adams = () => {
           facilities: {
             links: {
               related: "/facilities/?filter[stop]=70104",
+            },
+          },
+          parent_station: {
+            data: {
+              id: "place-qamnl",
+              type: "stop",
+            },
+          },
+          recommended_transfers: {},
+          zone: {
+            data: {
+              id: "RapidTransit",
+              type: "zone",
+            },
+          },
+        },
+        type: "stop",
+      },
+    ],
+    jsonapi: {
+      version: "1.0",
+    },
+  };
+};
+
+exports.nowhere = () => {
+  return {
+    data: [
+      {
+        attributes: {},
+        id: "notaline",
+        links: {
+          self: "/routes/nowhere",
+        },
+        relationships: {
+          line: {
+            data: {
+              id: "line-nowhere",
+              type: "line",
+            },
+          },
+          route_patterns: {},
+          stop: {
+            data: {
+              id: "404",
+              type: "stop",
+            },
+          },
+        },
+        type: "route",
+      },
+    ],
+    included: [
+      {
+        attributes: {
+          name: "nowhere",
+        },
+        id: "nowhere",
+        links: {
+          self: "/stops/404",
+        },
+        relationships: {
+          child_stops: {},
+          facilities: {
+            links: {
+              related: "/facilities/?filter[stop]=404",
             },
           },
           parent_station: {
