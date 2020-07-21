@@ -16,7 +16,7 @@
   "license": "MIT",
   "devDependencies": {
     "aws-lambda-pify": "^3.0.0",
-    "codecov": "^3.7.0",
+    "codecov": "^3.7.1",
     "dotenv": "^8.2.0",
     "fs": "0.0.1-security",
     "jest": "^26.0.1",
