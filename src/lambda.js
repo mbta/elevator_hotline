@@ -9,12 +9,12 @@ function getLine(line, line_id) {
   return config(line)
     .split(",")
     .map((item) => {
-      return { line: item.trim(), id: line_id };
+      return [item.trim(), line_id];
     });
 }
 
 function defaultMessage(line) {
-  return ["<speak>", config("OPERATIONAL_MESSAGE"), line, "</speak>"].join(" ");
+  return `<speak> ${config("OPERATIONAL_MESSAGE")} ${line} </speak>`;
 }
 
 function lifecycle_order(lifecycle) {
@@ -32,75 +32,84 @@ function type_order(type) {
 }
 
 function compare_types(a, b) {
-  if (type_order(a.type) > type_order(b.type)) {
-    return -1;
-  } else if (type_order(a.type) < type_order(b.type)) {
-    return 1;
+  const a_type_order = type_order(a.type);
+  const b_type_order = type_order(b.type);
+  if (a_type_order != b_type_order) {
+    return b_type_order - a_type_order;
   } else {
-    if (lifecycle_order(a.lifecycle) > lifecycle_order(b.lifecycle)) {
-      return -1;
-    } else if (lifecycle_order(a.lifecycle) < lifecycle_order(b.lifecycle)) {
-      return 1;
+    const a_lifecycle_order = lifecycle_order(a.lifecycle);
+    const b_lifecycle_order = lifecycle_order(b.lifecycle);
+    if (a_lifecycle_order > b_lifecycle_order) {
+      return b_lifecycle_order - a_lifecycle_order;
     } else {
-      if (a.updatedAt > b.updatedAt) {
-        return -1;
-      } else if (b.updatedAt > a.updatedAt) {
-        return 1;
-      } else {
-        return 0;
-      }
+      // most recently updated first
+      return b.updatedAt - a.updatedAt;
     }
   }
 }
+function time(name, fn) {
+  const start = process.hrtime();
+  const result = fn();
+  const [seconds, nanoseconds] = process.hrtime(start);
+  console.log(name, " took ", seconds, "s, ", nanoseconds / 1000000, "ms");
+  return result;
+}
+
+const RED = Symbol("red");
+const ORANGE = Symbol("orange");
+const GREEN = Symbol("green");
+const BLUE = Symbol("blue");
+const SILVER = Symbol("silver");
+const COMMUTER = Symbol("commuter");
 
 exports.run = function (event, context) {
-  const operational = config("OPERATIONAL_MESSAGE");
   const route_ids = [
-    getLine("LINE_RED", "red"),
-    getLine("LINE_ORANGE", "orange"),
-    getLine("LINE_GREEN", "green"),
-    getLine("LINE_BLUE", "blue"),
-    getLine("LINE_SILVER", "silver"),
-    getLine("LINE_COMMUTER", "commuter"),
+    getLine("LINE_RED", RED),
+    getLine("LINE_ORANGE", ORANGE),
+    getLine("LINE_GREEN", GREEN),
+    getLine("LINE_BLUE", BLUE),
+    getLine("LINE_SILVER", SILVER),
+    getLine("LINE_COMMUTER", COMMUTER),
   ].reduce((acc, val) => [...acc, ...val], []);
 
-  const routes_table = route_ids.reduce((acc, route) => {
-    acc[route.line] = route.id;
-    return acc;
-  }, {});
+  const routes_table = new Map(route_ids);
 
   return alerts.get(config("API_KEY")).then((alertsResponse) => {
-    const requests = alertsResponse.entities.map((entity) =>
-      routes.get(config("API_KEY"), entity)
-    );
-    return Promise.all(requests).then((requests) => {
-      const stops = requests.reduce((acc, response) => {
-        acc[response.stop] = {
+    const routeQueries = alertsResponse.entities.map((entity) =>
+      routes.get(config("API_KEY"), entity).then((response) => [
+        response.stop,
+        {
+          stop: response.stop,
           name: response.name,
-          routes: Object.keys(
-            response.routes.reduce((acc, route) => {
-              acc[routes_table[route]] = true;
-              return acc;
-            }, {})
+          routes: new Set(
+            response.routes.map((route) => routes_table.get(route))
           ),
-        };
-        return acc;
-      }, {});
+        },
+      ])
+    );
+    return Promise.all(routeQueries).then((responses) => {
+      const stops = new Map(responses);
       const lines = alertsResponse.alerts.reduce(
         (acc, alert) => {
-          alert.station = alert.entities.find((entity) => {
-            if (stops[entity].routes.length != 0) {
-              return stops[entity].routes.some((route) => route in acc);
+          const station = alert.entities.find((entity) => {
+            const stop = stops.get(entity);
+            if (stop && stop.routes.size != 0) {
+              for (let route of stop.routes) {
+                if (acc.has(route)) {
+                  return true;
+                }
+              }
             }
             return false;
           });
-          if (stops[alert.station]) {
-            alert.name = stops[alert.station].name;
-            stops[alert.station].routes.map((route) => {
-              if (route in acc) {
-                acc[route].push(alert);
+          if (station) {
+            const stop = stops.get(station);
+            alert.stopName = stop.name;
+            for (let route of stop.routes) {
+              if (acc.has(route)) {
+                acc.get(route).push(alert);
               }
-            });
+            }
           } else {
             console.log(
               "Error: Alert for a station not in routes " +
@@ -109,14 +118,14 @@ exports.run = function (event, context) {
           }
           return acc;
         },
-        {
-          red: [],
-          orange: [],
-          green: [],
-          blue: [],
-          silver: [],
-          commuter: [],
-        }
+        new Map([
+          [RED, []],
+          [ORANGE, []],
+          [GREEN, []],
+          [BLUE, []],
+          [SILVER, []],
+          [COMMUTER, []],
+        ])
       );
 
       let output = {
@@ -128,29 +137,20 @@ exports.run = function (event, context) {
         silver: defaultMessage("silver line"),
         commuter: defaultMessage("commuter rail"),
       };
-      Object.keys(lines).map((line) => {
-        lines[line].sort((a, b) => compare_types(a, b));
-        if (lines[line].length != 0) {
-          output[line] = "<speak>";
-        }
-        lines[line].map(
+      for (let [line, alerts] of lines) {
+        alerts.sort((a, b) => compare_types(a, b));
+        const speech = alerts.map(
           (alert) =>
-            (output[line] = [
-              output[line],
-              '<emphasis level="moderate"> ',
-              alert.name,
-              " </emphasis> ",
-              alert.lifecycle.toLowerCase(),
-              " ",
-              alert.type,
-              ' <break time="1s"/> ',
-              alert.description,
-            ].join(""))
+            `<emphasis level="moderate"> ${
+              alert.stopName
+            } </emphasis> ${alert.lifecycle.toLowerCase()} ${
+              alert.type
+            } <break time="1s"/> ${alert.description}`
         );
-        if (lines[line].length != 0) {
-          output[line] = output[line] + " </speak>";
+        if (speech.length) {
+          output[line.description] = `<speak>${speech.join("")} </speak>`;
         }
-      });
+      }
       context.succeed(output);
       return output;
     });
