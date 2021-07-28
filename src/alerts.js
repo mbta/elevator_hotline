@@ -15,9 +15,14 @@ function cleanUpText(input) {
     .replace(/'/g, "&apos;")
     .replace(/\b([sS][tT])\b/g, "street")
     .replace(/\b([iI][nN][bB])\b\./g, "inbound")
-    .replace(/\r\n\r\n/g, ' <break time="1s"/> ')
-    .replace(/\r\n/g, ' <break time="1s"/> ');
+    .replace(/\r\n(\r\n)?/g, ' <break time="1s"/> ');
 }
+
+const ALERTS_TO_USE = new Set([
+  "ELEVATOR_CLOSURE",
+  "ESCALATOR_CLOSURE",
+  "ACCESS_ISSUE",
+]);
 
 exports.get = (apiKey) => {
   const url = new URL("/alerts", client.base());
@@ -29,26 +34,19 @@ exports.get = (apiKey) => {
   url.searchParams.append("api_key", apiKey);
 
   return client.get(url).then((response) => {
-    let alert_entities = {};
+    let alert_entities = new Set();
     const alerts = response.data
-      .filter((alert) => {
-        return (
-          alert.attributes.effect === "ELEVATOR_CLOSURE" ||
-          alert.attributes.effect === "ESCALATOR_CLOSURE" ||
-          alert.attributes.effect === "ACCESS_ISSUE"
-        );
-      })
+      .filter((alert) => ALERTS_TO_USE.has(alert.attributes.effect))
       .map((alert) => {
         const attributes = alert.attributes;
-        const description = [
-          cleanUpText(emptyStringIfNull(attributes.header)),
-          ".",
-          cleanUpText(emptyStringIfNull(attributes.description)),
-          '<break time="1s"/>',
-        ].join(" ");
+        const description = `${cleanUpText(
+          emptyStringIfNull(attributes.header)
+        )} . ${cleanUpText(
+          emptyStringIfNull(attributes.description)
+        )} <break time="1s"/>`;
 
         const entities = attributes.informed_entity.map((entity) => {
-          alert_entities[entity.stop] = null;
+          alert_entities.add(entity.stop);
           return entity.stop;
         });
 
@@ -69,7 +67,7 @@ exports.get = (apiKey) => {
     return {
       id: "alerts",
       alerts: alerts,
-      entities: Object.keys(alert_entities),
+      entities: [...alert_entities],
     };
   });
 };

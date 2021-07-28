@@ -10,9 +10,7 @@ exports.get = (apiKey, stop) => {
   return client.get(url).then((response) => {
     let station = null;
     if (response.included && response.included.length != 0) {
-      station = response.included.map(
-        (included) => included.attributes.name
-      )[0];
+      station = response.included[0].attributes.name;
     }
 
     const allRoutes = response.data.map((route) => route.id);
