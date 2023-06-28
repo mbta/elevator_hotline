@@ -11,6 +11,7 @@ jobs:
       - uses: mbta/actions/npm-install
         with:
           node-version: 14
+          cache-uuid: ${{ secrets.CACHE_UUID_PROD }}
       - uses: mbta/actions/deploy-lambda
         with:
           role-to-assume: ${{ secrets.AWS_PROD_ROLE }}
