@@ -13,7 +13,7 @@ jobs:
           node-version: 14
       - uses: mbta/actions/deploy-lambda
         with:
-          role-to-assume: ${{ secrets.AWS_ROLE }}
+          role-to-assume: ${{ secrets.AWS_ROLE_ARN }}
           lambda-function: elevator-hotline-dev
           slack-webhook-url: ${{ secrets.SLACK_WEBHOOK }}
 
