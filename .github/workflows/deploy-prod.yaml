@@ -1,5 +1,8 @@
 name: Deploy to Production Environment
 
+permissions:
+  id-token: write
+
 on:
   workflow_dispatch:
 
