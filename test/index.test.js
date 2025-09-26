@@ -47,7 +47,7 @@ test("if http client gets non api data. lambda returns back a status 500", () =>
 
   return fn({}).then((result) => {
     expect(console.log).toHaveBeenCalledWith(
-      "Error: TypeError: Cannot read property 'filter' of undefined"
+      "Error: TypeError: Cannot read properties of undefined (reading 'filter')"
     );
     expect(result).toStrictEqual({ status: 500 });
   });

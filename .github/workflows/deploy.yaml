@@ -1,0 +1,24 @@
+name: Deploy
+
+on:
+  push:
+    branches: ["master"]
+  workflow_dispatch:
+    inputs:
+      environment:
+        type: environment
+        required: true
+        default: dev
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    permissions:
+      id-token: write
+      contents: read
+    steps:
+      - uses: actions/checkout@v5
+      - uses: ./.github/actions/deploy
+        with:
+          aws-role: ${{ secrets.AWS_ROLE_ARN }}
+          environment: ${{ inputs.environment }}

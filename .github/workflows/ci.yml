@@ -1,0 +1,46 @@
+name: CI
+
+on:
+  push:
+    paths-ignore:
+      - "*.md"
+      - LICENSE
+
+concurrency:
+  group: ci-${{ github.ref }}
+  cancel-in-progress: true
+
+defaults:
+  run:
+    shell: bash
+
+jobs:
+  deploy:
+    name: Deploy dry-run
+    runs-on: ubuntu-latest
+    permissions:
+      id-token: write
+      contents: read
+    steps:
+      - uses: actions/checkout@v5
+      - uses: ./.github/actions/deploy
+        with:
+          aws-role: ${{ secrets.AWS_ROLE_ARN }}
+          dry-run: "true"
+          environment: dev
+
+  format:
+    name: Check formatting
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v5
+      - uses: ./.github/actions/setup
+      - run: npm run prettier:check
+
+  test:
+    name: Tests
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v5
+      - uses: ./.github/actions/setup
+      - run: npm test
