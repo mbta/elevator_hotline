@@ -1,0 +1,39 @@
+name: Deploy
+description: Deploys new Lambda function code
+
+inputs:
+  aws-role:
+    description: AWS role to assume
+    required: true
+  dry-run:
+    description: >-
+      If truthy, the deploy will be a dry run, or will not be attempted at all
+      if `aws-role` is blank (instead of erroring)
+    required: false
+    default: ""
+  environment:
+    description: Environment to deploy to (dev/prod)
+    required: true
+
+runs:
+  using: composite
+  steps:
+    - uses: ./.github/actions/setup
+
+    - uses: aws-actions/configure-aws-credentials@v5
+      with:
+        aws-region: us-east-1
+        role-to-assume: ${{ inputs.aws-role }}
+
+    - name: Package function
+      shell: bash
+      run: zip -r function.zip .
+
+    - name: Update function code
+      if: ${{ !inputs.dry-run || inputs.aws-role }}
+      shell: bash
+      run: |
+        aws lambda update-function-code \
+          --function-name elevator-hotline-${{ inputs.environment }} \
+          --zip-file fileb://function.zip \
+          ${{ inputs.dry-run && '--dry-run' || '' }}

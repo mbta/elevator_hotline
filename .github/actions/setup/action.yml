@@ -1,0 +1,27 @@
+name: Set up tools
+description: Sets up and caches ASDF tools and dependencies
+runs:
+  using: composite
+  steps:
+    - uses: actions/cache@v4
+      id: asdf-cache
+      with:
+        path: ~/.asdf
+        key: asdf-${{ hashFiles('.tool-versions') }}
+
+    - uses: asdf-vm/actions/install@v3
+      if: steps.asdf-cache.outputs.cache-hit != 'true'
+
+    - uses: mbta/actions/reshim-asdf@v1
+      if: steps.asdf-cache.outputs.cache-hit == 'true'
+
+    - uses: actions/cache@v4
+      id: deps-cache
+      with:
+        path: node_modules
+        key: deps-${{ hashFiles('.tool-versions', 'package-lock.json') }}
+
+    - name: Install dependencies
+      if: steps.deps-cache.outputs.cache-hit != 'true'
+      shell: bash
+      run: npm ci
