@@ -21,4 +21,4 @@ jobs:
       - uses: ./.github/actions/deploy
         with:
           aws-role: ${{ secrets.AWS_ROLE_ARN }}
-          environment: ${{ inputs.environment }}
+          environment: ${{ inputs.environment || 'dev' }}
