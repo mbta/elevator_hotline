@@ -1,6 +1,8 @@
-const client = require("./api_client.js");
+import * as client from "./api_client";
 
-exports.get = (apiKey, stop) => {
+type Response = { stop: string; name: string | null; routes: string[] };
+
+export const get = (apiKey: string, stop: string): Promise<Response> => {
   const url = new URL("/routes", client.base());
   url.searchParams.append("fields[route]", "id");
   url.searchParams.append("fields[stop]", "name");
@@ -11,7 +13,7 @@ exports.get = (apiKey, stop) => {
     let station = null;
     if (response.included && response.included.length != 0) {
       station = response.included.map(
-        (included) => included.attributes.name
+        (included) => included.attributes.name as string
       )[0];
     }
 

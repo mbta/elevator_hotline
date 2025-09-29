@@ -14,7 +14,7 @@ When making changes in amazon connect make sure to export and update the json fi
 
 The lambda is called whenever a call is made to the elevator hotline. It in turn calls the mbta api to get the current alerts and then the affected stations.  It then builds a payload broken up by line for the ivr.
 
-To run the lambda locally it is recommended to put an api key in .env.override as API_KEY
+To run the lambda locally, put an api key in .env.override as API_KEY
 
 First install the dependencies by running
 

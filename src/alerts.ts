@@ -1,10 +1,6 @@
-const client = require("./api_client.js");
+import * as client from "./api_client";
 
-function emptyStringIfNull(input) {
-  return input ? input : "";
-}
-
-function cleanUpText(input) {
+function cleanUpText(input: string) {
   return input
     .replace("to/from", "to or from")
     .replace("/", " ")
@@ -19,7 +15,32 @@ function cleanUpText(input) {
     .replace(/\r\n/g, ' <break time="1s"/> ');
 }
 
-exports.get = (apiKey) => {
+type APIAlertAttributes = {
+  description: string | null;
+  effect: string;
+  header: string;
+  informed_entity: { stop: string | null }[];
+  lifecycle: string;
+  updated_at: string;
+};
+
+type StopId = string;
+
+export type Alert = {
+  id: string;
+  type: string;
+  lifecycle: string;
+  description: string;
+  entities: StopId[];
+  updatedAt: number;
+};
+
+type Response = {
+  alerts: Alert[];
+  entities: StopId[];
+};
+
+export const get = (apiKey: string): Promise<Response> => {
   const url = new URL("/alerts", client.base());
   url.searchParams.append(
     "fields[alert]",
@@ -29,7 +50,7 @@ exports.get = (apiKey) => {
   url.searchParams.append("api_key", apiKey);
 
   return client.get(url).then((response) => {
-    let alert_entities = {};
+    let alert_entities: Record<string, null> = {};
     const alerts = response.data
       .filter((alert) => {
         return (
@@ -39,17 +60,17 @@ exports.get = (apiKey) => {
         );
       })
       .map((alert) => {
-        const attributes = alert.attributes;
+        const attributes = alert.attributes as APIAlertAttributes;
         const description = [
-          cleanUpText(emptyStringIfNull(attributes.header)),
+          cleanUpText(attributes.header),
           ".",
-          cleanUpText(emptyStringIfNull(attributes.description)),
+          cleanUpText(attributes.description ?? ""),
           '<break time="1s"/>',
         ].join(" ");
 
         const entities = attributes.informed_entity.map((entity) => {
-          alert_entities[entity.stop] = null;
-          return entity.stop;
+          alert_entities[entity.stop!] = null;
+          return entity.stop!;
         });
 
         return {
@@ -67,7 +88,6 @@ exports.get = (apiKey) => {
       );
     }
     return {
-      id: "alerts",
       alerts: alerts,
       entities: Object.keys(alert_entities),
     };

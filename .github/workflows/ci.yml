@@ -44,3 +44,11 @@ jobs:
       - uses: actions/checkout@v5
       - uses: ./.github/actions/setup
       - run: npm test
+
+  types:
+    name: Check types
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v5
+      - uses: ./.github/actions/setup
+      - run: npx --no tsc

@@ -1,10 +1,13 @@
-const lambda = require("./src/lambda.js");
-const Sentry = require("@sentry/node");
-const secret = require("./src/secret.js");
+import type {
+  ConnectContactFlowEvent,
+  ConnectContactFlowHandler,
+  Context,
+} from "aws-lambda";
+import * as Sentry from "@sentry/node";
+import lambda from "./lambda";
+import * as secret from "./secret";
 
-("use strict");
-
-function initHandler(lambdaHandler) {
+function initHandler(lambdaHandler: typeof lambda) {
   if (process.env.NODE_ENV !== "prod" && process.env.NODE_ENV !== "dev") {
     const dotenv = require("dotenv");
     const fs = require("fs");
@@ -21,7 +24,7 @@ function initHandler(lambdaHandler) {
   const dsn = process.env.SENTRY_DSN;
   Sentry.init({ dsn: dsn });
 
-  return async (event, context) => {
+  return async (event: ConnectContactFlowEvent, context: Context) => {
     try {
       if (process.env.NODE_ENV == "prod" || process.env.NODE_ENV == "dev") {
         process.env.API_KEY = await secret.get(
@@ -35,10 +38,9 @@ function initHandler(lambdaHandler) {
       Sentry.captureException(error);
       await Sentry.flush(2000);
     }
-    context.succeed({ status: 500 });
+    context.succeed({ status: "500" });
+    return { status: "500" };
   };
 }
 
-exports.handler = initHandler((event, context) => {
-  return lambda.run(event, context);
-});
+export const handler: ConnectContactFlowHandler = initHandler(lambda);

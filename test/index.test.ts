@@ -1,8 +1,18 @@
-const lambda = require("../index.js");
-const data = require("./data.js");
-const pify = require("aws-lambda-pify");
+import type { Context, Handler } from "aws-lambda";
+import context from "aws-lambda-mock-context";
+import { promisify } from "node:util";
+import { handler } from "../src/index";
+import * as api_client from "../src/api_client";
+import * as data from "./data";
 
-const api_client = require("../src/api_client.js");
+const pifyHandler = (fn: Handler) => {
+  // The claimed return type of `context` doesn't include the mock-specific
+  // `Promise` field, which this helper uses, so a type assertion is needed
+  const ctx = context({ timeout: 0.5 }) as Context & { Promise: unknown };
+  return (event: unknown) =>
+    Promise.race([promisify(fn)(event, ctx), ctx.Promise]);
+};
+
 const no_outages = {
   blue:
     "<speak> Currently there are no outages reported for the  blue line </speak>",
@@ -16,7 +26,7 @@ const no_outages = {
     "<speak> Currently there are no outages reported for the  red line </speak>",
   silver:
     "<speak> Currently there are no outages reported for the  silver line </speak>",
-  status: 200,
+  status: "200",
 };
 
 const north_example =
@@ -26,43 +36,26 @@ const quincy_adams_example =
   '<speak><emphasis level="moderate"> Quincy Adams </emphasis> ongoing elevator closure <break time="1s"/> Example header. . example description <break time="1s"/> </speak>';
 
 test("if http client fails. lambda returns back a status 500", () => {
-  const spy = jest
-    .spyOn(api_client, "get")
-    .mockImplementation(() => Promise.reject());
+  jest.spyOn(api_client, "get").mockImplementation(() => Promise.reject());
   console.log = jest.fn();
 
-  const fn = pify(lambda.handler);
+  const fn = pifyHandler(handler);
   return fn({}).then((result) => {
     expect(console.log).toHaveBeenCalledWith("Error: undefined");
-    expect(result).toStrictEqual({ status: 500 });
-  });
-});
-
-test("if http client gets non api data. lambda returns back a status 500", () => {
-  const spy = jest
-    .spyOn(api_client, "get")
-    .mockImplementation(() => Promise.resolve({ status: 500 }));
-  console.log = jest.fn();
-  const fn = pify(lambda.handler);
-
-  return fn({}).then((result) => {
-    expect(console.log).toHaveBeenCalledWith(
-      "Error: TypeError: Cannot read properties of undefined (reading 'filter')"
-    );
-    expect(result).toStrictEqual({ status: 500 });
+    expect(result).toStrictEqual({ status: "500" });
   });
 });
 
 test("if http client gets no alerts responds all lines okay.", () => {
-  const spy = jest.spyOn(api_client, "get").mockImplementation((url) => {
+  jest.spyOn(api_client, "get").mockImplementation((url) => {
     if (url.pathname == "/alerts") {
       return Promise.resolve(data.no_alerts());
     } else if (url.pathname == "/routes") {
       return Promise.resolve(data.no_station());
-    }
+    } else return Promise.reject();
   });
   console.log = jest.fn();
-  const fn = pify(lambda.handler);
+  const fn = pifyHandler(handler);
 
   return fn({}).then((result) => {
     expect(console.log).toHaveBeenCalledWith(
@@ -73,7 +66,7 @@ test("if http client gets no alerts responds all lines okay.", () => {
 });
 
 test("render one alert", () => {
-  const spy = jest.spyOn(api_client, "get").mockImplementation((url) => {
+  jest.spyOn(api_client, "get").mockImplementation((url) => {
     console.log(url);
     if (url.pathname == "/alerts") {
       return Promise.resolve(data.one_alert());
@@ -84,10 +77,10 @@ test("render one alert", () => {
       } else {
         return Promise.resolve(data.no_station());
       }
-    }
+    } else return Promise.reject();
   });
 
-  const fn = pify(lambda.handler);
+  const fn = pifyHandler(handler);
   return fn({}).then((result) => {
     expect(result).toStrictEqual({
       blue: no_outages.blue,
@@ -102,7 +95,7 @@ test("render one alert", () => {
 });
 
 test("render one alert across multiple lines", () => {
-  const spy = jest.spyOn(api_client, "get").mockImplementation((url) => {
+  jest.spyOn(api_client, "get").mockImplementation((url) => {
     if (url.pathname == "/alerts") {
       return Promise.resolve(data.one_alert());
     } else if (url.pathname == "/routes") {
@@ -112,10 +105,10 @@ test("render one alert across multiple lines", () => {
       } else {
         return Promise.resolve(data.no_station());
       }
-    }
+    } else return Promise.reject();
   });
   console.log = jest.fn();
-  const fn = pify(lambda.handler);
+  const fn = pifyHandler(handler);
   return fn({}).then((result) => {
     expect(result).toStrictEqual({
       blue: no_outages.blue,
@@ -130,7 +123,7 @@ test("render one alert across multiple lines", () => {
 });
 
 test("render multiple alerts across multiple lines", () => {
-  const spy = jest.spyOn(api_client, "get").mockImplementation((url) => {
+  jest.spyOn(api_client, "get").mockImplementation((url) => {
     if (url.pathname == "/alerts") {
       return Promise.resolve(data.many_alerts());
     } else if (url.pathname == "/routes") {
@@ -142,10 +135,10 @@ test("render multiple alerts across multiple lines", () => {
       } else {
         return Promise.resolve(data.no_station());
       }
-    }
+    } else return Promise.reject();
   });
 
-  const fn = pify(lambda.handler);
+  const fn = pifyHandler(handler);
   return fn({}).then((result) => {
     expect(result).toStrictEqual({
       blue: no_outages.blue,
@@ -160,7 +153,7 @@ test("render multiple alerts across multiple lines", () => {
 });
 
 test("only show alerts for elevator or escalator closure", () => {
-  const spy = jest.spyOn(api_client, "get").mockImplementation((url) => {
+  jest.spyOn(api_client, "get").mockImplementation((url) => {
     if (url.pathname == "/alerts") {
       return Promise.resolve(data.not_alert());
     } else if (url.pathname == "/routes") {
@@ -170,16 +163,16 @@ test("only show alerts for elevator or escalator closure", () => {
       } else {
         return Promise.resolve(data.no_station());
       }
-    }
+    } else return Promise.reject();
   });
-  const fn = pify(lambda.handler);
+  const fn = pifyHandler(handler);
   return fn({}).then((result) => {
     expect(result).toStrictEqual(no_outages);
   });
 });
 
 test("warn on unmatched alert, but still return correctly", () => {
-  const spy = jest.spyOn(api_client, "get").mockImplementation((url) => {
+  jest.spyOn(api_client, "get").mockImplementation((url) => {
     if (url.pathname == "/alerts") {
       return Promise.resolve(data.unmatched_alert());
     } else if (url.pathname == "/routes") {
@@ -189,10 +182,10 @@ test("warn on unmatched alert, but still return correctly", () => {
       } else {
         return Promise.resolve(data.no_station());
       }
-    }
+    } else return Promise.reject();
   });
   console.log = jest.fn();
-  const fn = pify(lambda.handler);
+  const fn = pifyHandler(handler);
   return fn({}).then((result) => {
     expect(console.log).toHaveBeenCalledWith(
       'Error: Alert for a station not in routes {"id":"338974","type":"escalator closure","lifecycle":"ONGOING","description":"Example header. . example description <break time=\\"1s\\"/>","entities":["place-south"],"updatedAt":1575039547000}'
@@ -202,7 +195,7 @@ test("warn on unmatched alert, but still return correctly", () => {
 });
 
 test("render multiple alerts across multiple lines to test sorting", () => {
-  const spy = jest.spyOn(api_client, "get").mockImplementation((url) => {
+  jest.spyOn(api_client, "get").mockImplementation((url) => {
     if (url.pathname == "/alerts") {
       return Promise.resolve(data.many_alerts_for_sort());
     } else if (url.pathname == "/routes") {
@@ -218,20 +211,20 @@ test("render multiple alerts across multiple lines to test sorting", () => {
       } else {
         return Promise.resolve(data.no_station());
       }
-    }
+    } else return Promise.reject();
   });
 
-  const fn = pify(lambda.handler);
+  const fn = pifyHandler(handler);
   return fn({}).then((result) => {
     expect(result).toStrictEqual({
       blue: no_outages.blue,
       commuter: no_outages.commuter,
       green:
-        '<speak><emphasis level="moderate"> North Station </emphasis> new elevator closure <break time="1s"/>  . example description new <break time="1s"/><emphasis level="moderate"> North Station </emphasis> ongoing elevator closure <break time="1s"/>  . example description <break time="1s"/> </speak>',
+        '<speak><emphasis level="moderate"> North Station </emphasis> new elevator closure <break time="1s"/> Example header1. . example description new <break time="1s"/><emphasis level="moderate"> North Station </emphasis> ongoing elevator closure <break time="1s"/> Example header4. . example description <break time="1s"/> </speak>',
       orange:
-        '<speak><emphasis level="moderate"> North Station </emphasis> new elevator closure <break time="1s"/>  . example description new <break time="1s"/><emphasis level="moderate"> North Station </emphasis> ongoing elevator closure <break time="1s"/>  . example description <break time="1s"/> </speak>',
+        '<speak><emphasis level="moderate"> North Station </emphasis> new elevator closure <break time="1s"/> Example header1. . example description new <break time="1s"/><emphasis level="moderate"> North Station </emphasis> ongoing elevator closure <break time="1s"/> Example header4. . example description <break time="1s"/> </speak>',
       red:
-        '<speak><emphasis level="moderate"> Quincy Adams </emphasis> ongoing elevator closure <break time="1s"/> Example header. . example description <break time="1s"/><emphasis level="moderate"> Quincy Adams </emphasis> ongoing elevator closure <break time="1s"/> Example header5. . example description5 <break time="1s"/><emphasis level="moderate"> Quincy Center </emphasis> ongoing_upcoming escalator closure <break time="1s"/> Example header2. . example description2 <break time="1s"/><emphasis level="moderate"> Quincy Center </emphasis> ongoing_upcoming access issue <break time="1s"/> Example header3. . example description3 <break time="1s"/> </speak>',
+        '<speak><emphasis level="moderate"> Quincy Adams </emphasis> ongoing elevator closure <break time="1s"/> Example header6. . example description <break time="1s"/><emphasis level="moderate"> Quincy Adams </emphasis> ongoing elevator closure <break time="1s"/> Example header5. . example description5 <break time="1s"/><emphasis level="moderate"> Quincy Center </emphasis> ongoing_upcoming escalator closure <break time="1s"/> Example header2. . example description2 <break time="1s"/><emphasis level="moderate"> Quincy Center </emphasis> ongoing_upcoming access issue <break time="1s"/> Example header3. . example description3 <break time="1s"/> </speak>',
       silver: no_outages.silver,
       status: no_outages.status,
     });

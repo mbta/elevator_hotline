@@ -1,11 +1,21 @@
-const alerts = require("./alerts.js");
-const routes = require("./routes.js");
+import type { ConnectContactFlowEvent, Context } from "aws-lambda";
+import * as alerts from "./alerts";
+import * as routes from "./routes";
 
-function config(item) {
-  return process.env[item];
+type Line = "red" | "orange" | "green" | "blue" | "silver" | "commuter";
+type RouteId = string;
+type StopId = string;
+
+type AlertWithExtras = alerts.Alert & {
+  name?: string | null;
+  station?: string;
+};
+
+function config(item: string) {
+  return process.env[item]!;
 }
 
-function getLine(line, line_id) {
+function getLine(line: string, line_id: Line) {
   return config(line)
     .split(",")
     .map((item) => {
@@ -13,11 +23,11 @@ function getLine(line, line_id) {
     });
 }
 
-function defaultMessage(line) {
+function defaultMessage(line: string) {
   return ["<speak>", config("OPERATIONAL_MESSAGE"), line, "</speak>"].join(" ");
 }
 
-function lifecycle_order(lifecycle) {
+function lifecycle_order(lifecycle: string) {
   if (lifecycle == "NEW") return 4;
   if (lifecycle == "ONGOING_UPCOMING") return 3;
   if (lifecycle == "ONGOING") return 2;
@@ -25,13 +35,14 @@ function lifecycle_order(lifecycle) {
   return 0;
 }
 
-function type_order(type) {
+function type_order(type: string) {
   if (type == "elevator closure") return 3;
   if (type == "escalator closure") return 2;
   if (type == "access issue") return 1;
+  return 0;
 }
 
-function compare_types(a, b) {
+function compare_types(a: AlertWithExtras, b: AlertWithExtras) {
   if (type_order(a.type) > type_order(b.type)) {
     return -1;
   } else if (type_order(a.type) < type_order(b.type)) {
@@ -53,8 +64,7 @@ function compare_types(a, b) {
   }
 }
 
-exports.run = function (event, context) {
-  const operational = config("OPERATIONAL_MESSAGE");
+const lambda = function (_event: ConnectContactFlowEvent, context: Context) {
   const route_ids = [
     getLine("LINE_RED", "red"),
     getLine("LINE_ORANGE", "orange"),
@@ -67,7 +77,7 @@ exports.run = function (event, context) {
   const routes_table = route_ids.reduce((acc, route) => {
     acc[route.line] = route.id;
     return acc;
-  }, {});
+  }, {} as Record<RouteId, Line>);
 
   return alerts.get(config("API_KEY")).then((alertsResponse) => {
     const requests = alertsResponse.entities.map((entity) =>
@@ -81,20 +91,20 @@ exports.run = function (event, context) {
             response.routes.reduce((acc, route) => {
               acc[routes_table[route]] = true;
               return acc;
-            }, {})
-          ),
+            }, {} as Record<Line, true>)
+          ) as Line[],
         };
         return acc;
-      }, {});
+      }, {} as Record<StopId, { name: string | null; routes: Line[] }>);
       const lines = alertsResponse.alerts.reduce(
-        (acc, alert) => {
+        (acc, alert: AlertWithExtras) => {
           alert.station = alert.entities.find((entity) => {
             if (stops[entity].routes.length != 0) {
               return stops[entity].routes.some((route) => route in acc);
             }
             return false;
           });
-          if (stops[alert.station]) {
+          if (alert.station && stops[alert.station]) {
             alert.name = stops[alert.station].name;
             stops[alert.station].routes.map((route) => {
               if (route in acc) {
@@ -116,11 +126,11 @@ exports.run = function (event, context) {
           blue: [],
           silver: [],
           commuter: [],
-        }
+        } as Record<Line, AlertWithExtras[]>
       );
 
       let output = {
-        status: 200,
+        status: "200",
         red: defaultMessage("red line"),
         orange: defaultMessage("orange line"),
         green: defaultMessage("green line"),
@@ -128,7 +138,7 @@ exports.run = function (event, context) {
         silver: defaultMessage("silver line"),
         commuter: defaultMessage("commuter rail"),
       };
-      Object.keys(lines).map((line) => {
+      (Object.keys(lines) as Line[]).map((line) => {
         lines[line].sort((a, b) => compare_types(a, b));
         if (lines[line].length != 0) {
           output[line] = "<speak>";
@@ -156,3 +166,5 @@ exports.run = function (event, context) {
     });
   });
 };
+
+export default lambda;

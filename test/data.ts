@@ -1,59 +1,4 @@
-const north_station = {
-  attributes: {
-    name: "North Station",
-  },
-  id: "place-north",
-  links: {
-    self: "/stops/place-north",
-  },
-  relationships: {
-    child_stops: {},
-    facilities: {
-      links: {
-        related: "/facilities/?filter[stop]=place-north",
-      },
-    },
-    parent_station: {
-      data: null,
-    },
-    recommended_transfers: {},
-    zone: {
-      data: {
-        id: "CR-zone-1A",
-        type: "zone",
-      },
-    },
-  },
-  type: "stop",
-};
-
-const symphony = {
-  attributes: {
-    name: "Symphony",
-  },
-  id: "place-symcl",
-  links: {
-    self: "/stops/place-symcl",
-  },
-  relationships: {
-    child_stops: {},
-    facilities: {
-      links: {
-        related: "/facilities/?filter[stop]=place-symcl",
-      },
-    },
-    parent_station: {
-      data: null,
-    },
-    recommended_transfers: {},
-    zone: {
-      data: null,
-    },
-  },
-  type: "stop",
-};
-
-exports.no_alerts = function () {
+export const no_alerts = function () {
   return {
     data: [],
     jsonapi: {
@@ -62,7 +7,7 @@ exports.no_alerts = function () {
   };
 };
 
-exports.one_alert = function () {
+export const one_alert = function () {
   return {
     data: [
       {
@@ -112,7 +57,7 @@ exports.one_alert = function () {
   };
 };
 
-exports.not_alert = function () {
+export const not_alert = function () {
   return {
     data: [
       {
@@ -157,7 +102,7 @@ exports.not_alert = function () {
   };
 };
 
-exports.unmatched_alert = function () {
+export const unmatched_alert = function () {
   return {
     data: [
       {
@@ -202,7 +147,7 @@ exports.unmatched_alert = function () {
   };
 };
 
-exports.many_alerts = function () {
+export const many_alerts = function () {
   return {
     data: [
       {
@@ -282,7 +227,7 @@ exports.many_alerts = function () {
   };
 };
 
-exports.many_alerts_for_sort = function () {
+export const many_alerts_for_sort = function () {
   return {
     data: [
       {
@@ -298,6 +243,7 @@ exports.many_alerts_for_sort = function () {
           created_at: "2019-10-21T16:59:16-04:00",
           description: "example description new",
           effect: "ELEVATOR_CLOSURE",
+          header: "Example header1.",
           informed_entity: [
             {
               activities: ["USING_WHEELCHAIR"],
@@ -337,6 +283,7 @@ exports.many_alerts_for_sort = function () {
           created_at: "2019-10-21T16:59:16-04:00",
           description: "example description",
           effect: "ELEVATOR_CLOSURE",
+          header: "Example header4.",
           informed_entity: [
             {
               activities: ["USING_WHEELCHAIR"],
@@ -371,7 +318,7 @@ exports.many_alerts_for_sort = function () {
           created_at: "2019-10-21T16:59:16-04:00",
           description: "example description",
           effect: "ELEVATOR_CLOSURE",
-          header: "Example header.",
+          header: "Example header6.",
           informed_entity: [
             {
               activities: ["USING_WHEELCHAIR"],
@@ -505,7 +452,7 @@ exports.many_alerts_for_sort = function () {
   };
 };
 
-exports.no_station = () => {
+export const no_station = () => {
   return {
     data: [],
     included: [],
@@ -514,7 +461,7 @@ exports.no_station = () => {
     },
   };
 };
-exports.north_station = () => {
+export const north_station = () => {
   return {
     data: [
       {
@@ -623,7 +570,7 @@ exports.north_station = () => {
   };
 };
 
-exports.quincy_center = () => {
+export const quincy_center = () => {
   return {
     data: [
       {
@@ -689,7 +636,7 @@ exports.quincy_center = () => {
   };
 };
 
-exports.quincy_adams = () => {
+export const quincy_adams = () => {
   return {
     data: [
       {
@@ -755,7 +702,7 @@ exports.quincy_adams = () => {
   };
 };
 
-exports.nowhere = () => {
+export const nowhere = () => {
   return {
     data: [
       {
