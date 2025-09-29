@@ -1,6 +1,6 @@
-const AWS = require("aws-sdk");
+import AWS from "aws-sdk";
 
-exports.get = (secretName) => {
+export const get = (secretName: string): Promise<string> => {
   return new Promise((resolve, reject) => {
     AWS.config.update({ region: process.env.AWS_REGION });
 
@@ -15,7 +15,7 @@ exports.get = (secretName) => {
           console.log(`The request had invalid params: ${err.message}`);
         }
         reject(err);
-      } else if (data.SecretString !== "") {
+      } else if (data.SecretString) {
         resolve(data.SecretString);
       } else {
         reject(new Error("Empty secret"));

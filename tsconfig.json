@@ -1,0 +1,7 @@
+{
+  "extends": "@tsconfig/node20",
+  "compilerOptions": {
+    "isolatedModules": true,
+    "noEmit": true
+  }
+}

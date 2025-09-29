@@ -27,7 +27,7 @@ runs:
 
     - name: Package function
       shell: bash
-      run: zip -r function.zip .
+      run: ./build.sh function.zip
 
     - name: Update function code
       if: ${{ !inputs.dry-run || inputs.aws-role }}
