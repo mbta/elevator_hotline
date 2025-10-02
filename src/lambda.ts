@@ -142,7 +142,7 @@ const lambda = function (_event: ConnectContactFlowEvent, context: Context) {
         } as Record<Line, AlertWithExtras[]>
       );
 
-      let output = {
+      const output = {
         status: "200",
         red: defaultMessage("red line"),
         orange: defaultMessage("orange line"),
