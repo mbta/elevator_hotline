@@ -14,16 +14,14 @@ const pifyHandler = (fn: Handler) => {
 };
 
 const no_outages = {
-  blue:
-    "<speak> Currently there are no outages reported for the  blue line </speak>",
+  blue: "<speak> Currently there are no outages reported for the  blue line </speak>",
   commuter:
     "<speak> Currently there are no outages reported for the  commuter rail </speak>",
   green:
     "<speak> Currently there are no outages reported for the  green line </speak>",
   orange:
     "<speak> Currently there are no outages reported for the  orange line </speak>",
-  red:
-    "<speak> Currently there are no outages reported for the  red line </speak>",
+  red: "<speak> Currently there are no outages reported for the  red line </speak>",
   silver:
     "<speak> Currently there are no outages reported for the  silver line </speak>",
   status: "200",
@@ -55,8 +53,8 @@ test("if http client gets no alerts responds all lines okay.", () => {
     } else return Promise.reject();
   });
   console.log = jest.fn();
-  const fn = pifyHandler(handler);
 
+  const fn = pifyHandler(handler);
   return fn({}).then((result) => {
     expect(console.log).toHaveBeenCalledWith(
       "Error: alerts returned no alerts when called, probably a problem."
@@ -108,6 +106,7 @@ test("render one alert across multiple lines", () => {
     } else return Promise.reject();
   });
   console.log = jest.fn();
+
   const fn = pifyHandler(handler);
   return fn({}).then((result) => {
     expect(result).toStrictEqual({
@@ -165,6 +164,7 @@ test("only show alerts for elevator or escalator closure", () => {
       }
     } else return Promise.reject();
   });
+
   const fn = pifyHandler(handler);
   return fn({}).then((result) => {
     expect(result).toStrictEqual(no_outages);
@@ -185,6 +185,7 @@ test("warn on unmatched alert, but still return correctly", () => {
     } else return Promise.reject();
   });
   console.log = jest.fn();
+
   const fn = pifyHandler(handler);
   return fn({}).then((result) => {
     expect(console.log).toHaveBeenCalledWith(
@@ -223,8 +224,7 @@ test("render multiple alerts across multiple lines to test sorting", () => {
         '<speak><emphasis level="moderate"> North Station </emphasis> new elevator closure <break time="1s"/> Example header1. . example description new <break time="1s"/><emphasis level="moderate"> North Station </emphasis> ongoing elevator closure <break time="1s"/> Example header4. . example description <break time="1s"/> </speak>',
       orange:
         '<speak><emphasis level="moderate"> North Station </emphasis> new elevator closure <break time="1s"/> Example header1. . example description new <break time="1s"/><emphasis level="moderate"> North Station </emphasis> ongoing elevator closure <break time="1s"/> Example header4. . example description <break time="1s"/> </speak>',
-      red:
-        '<speak><emphasis level="moderate"> Quincy Adams </emphasis> ongoing elevator closure <break time="1s"/> Example header6. . example description <break time="1s"/><emphasis level="moderate"> Quincy Adams </emphasis> ongoing elevator closure <break time="1s"/> Example header5. . example description5 <break time="1s"/><emphasis level="moderate"> Quincy Center </emphasis> ongoing_upcoming escalator closure <break time="1s"/> Example header2. . example description2 <break time="1s"/><emphasis level="moderate"> Quincy Center </emphasis> ongoing_upcoming access issue <break time="1s"/> Example header3. . example description3 <break time="1s"/> </speak>',
+      red: '<speak><emphasis level="moderate"> Quincy Adams </emphasis> ongoing elevator closure <break time="1s"/> Example header6. . example description <break time="1s"/><emphasis level="moderate"> Quincy Adams </emphasis> ongoing elevator closure <break time="1s"/> Example header5. . example description5 <break time="1s"/><emphasis level="moderate"> Quincy Center </emphasis> ongoing_upcoming escalator closure <break time="1s"/> Example header2. . example description2 <break time="1s"/><emphasis level="moderate"> Quincy Center </emphasis> ongoing_upcoming access issue <break time="1s"/> Example header3. . example description3 <break time="1s"/> </speak>',
       silver: no_outages.silver,
       status: no_outages.status,
     });

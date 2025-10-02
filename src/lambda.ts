@@ -74,28 +74,39 @@ const lambda = function (_event: ConnectContactFlowEvent, context: Context) {
     getLine("LINE_COMMUTER", "commuter"),
   ].reduce((acc, val) => [...acc, ...val], []);
 
-  const routes_table = route_ids.reduce((acc, route) => {
-    acc[route.line] = route.id;
-    return acc;
-  }, {} as Record<RouteId, Line>);
+  const routes_table = route_ids.reduce(
+    (acc, route) => {
+      acc[route.line] = route.id;
+      return acc;
+    },
+    {} as Record<RouteId, Line>
+  );
 
   return alerts.get(config("API_KEY")).then((alertsResponse) => {
     const requests = alertsResponse.entities.map((entity) =>
       routes.get(config("API_KEY"), entity)
     );
+
     return Promise.all(requests).then((requests) => {
-      const stops = requests.reduce((acc, response) => {
-        acc[response.stop] = {
-          name: response.name,
-          routes: Object.keys(
-            response.routes.reduce((acc, route) => {
-              acc[routes_table[route]] = true;
-              return acc;
-            }, {} as Record<Line, true>)
-          ) as Line[],
-        };
-        return acc;
-      }, {} as Record<StopId, { name: string | null; routes: Line[] }>);
+      const stops = requests.reduce(
+        (acc, response) => {
+          acc[response.stop] = {
+            name: response.name,
+            routes: Object.keys(
+              response.routes.reduce(
+                (acc, route) => {
+                  acc[routes_table[route]] = true;
+                  return acc;
+                },
+                {} as Record<Line, true>
+              )
+            ) as Line[],
+          };
+          return acc;
+        },
+        {} as Record<StopId, { name: string | null; routes: Line[] }>
+      );
+
       const lines = alertsResponse.alerts.reduce(
         (acc, alert: AlertWithExtras) => {
           alert.station = alert.entities.find((entity) => {
@@ -104,6 +115,7 @@ const lambda = function (_event: ConnectContactFlowEvent, context: Context) {
             }
             return false;
           });
+
           if (alert.station && stops[alert.station]) {
             alert.name = stops[alert.station].name;
             stops[alert.station].routes.map((route) => {
@@ -117,6 +129,7 @@ const lambda = function (_event: ConnectContactFlowEvent, context: Context) {
                 JSON.stringify(alert)
             );
           }
+
           return acc;
         },
         {
@@ -138,11 +151,12 @@ const lambda = function (_event: ConnectContactFlowEvent, context: Context) {
         silver: defaultMessage("silver line"),
         commuter: defaultMessage("commuter rail"),
       };
+
       (Object.keys(lines) as Line[]).map((line) => {
         lines[line].sort((a, b) => compare_types(a, b));
-        if (lines[line].length != 0) {
-          output[line] = "<speak>";
-        }
+
+        if (lines[line].length != 0) output[line] = "<speak>";
+
         lines[line].map(
           (alert) =>
             (output[line] = [
@@ -157,10 +171,10 @@ const lambda = function (_event: ConnectContactFlowEvent, context: Context) {
               alert.description,
             ].join(""))
         );
-        if (lines[line].length != 0) {
-          output[line] = output[line] + " </speak>";
-        }
+
+        if (lines[line].length != 0) output[line] = output[line] + " </speak>";
       });
+
       context.succeed(output);
       return output;
     });

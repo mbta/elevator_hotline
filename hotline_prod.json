@@ -1,1 +1,652 @@
-{"modules":[{"id":"6c745c27-6c4d-4eb1-87fa-6986c7e785b7","type":"SetLoggingBehavior","branches":[{"condition":"Success","transition":"378e525e-29ef-471b-b0a1-14b69e61f41e"}],"parameters":[{"name":"LoggingBehavior","value":"Enable"}],"metadata":{"position":{"x":141,"y":20.59805800546067}}},{"id":"52e502c3-221e-4fad-a4db-9892481f2116","type":"Disconnect","branches":[],"parameters":[],"metadata":{"position":{"x":446,"y":1012}}},{"id":"b07e1f8f-a47b-4636-abe9-5d0933c28abd","type":"PlayPrompt","branches":[{"condition":"Success","transition":"52e502c3-221e-4fad-a4db-9892481f2116"}],"parameters":[{"name":"Text","value":"Thank you for calling. Goodbye.","namespace":null},{"name":"TextToSpeechType","value":"text"}],"metadata":{"position":{"x":320,"y":792},"useDynamic":false}},{"id":"a93e74a8-355c-4b7c-9e86-a69f889095ce","type":"SetAttributes","branches":[{"condition":"Success","transition":"864985be-4aa7-4c5f-ba40-638da53f09d0"},{"condition":"Error","transition":"025df89c-5036-4627-b7a0-0ba3e999b8c2"}],"parameters":[{"name":"Attribute","value":"line_choice_log$.Attributes.line_choice","key":"line_choice_log","namespace":"User Defined"}],"metadata":{"position":{"x":1261,"y":70.59805800546067}}},{"id":"ff737200-4608-467e-95e6-6d2d5a3f116d","type":"GetUserInput","branches":[{"condition":"Evaluate","conditionType":"Equals","conditionValue":"9","transition":"e3ef239d-ad61-463e-bbd8-b14c34362a88"},{"condition":"Timeout","transition":"025df89c-5036-4627-b7a0-0ba3e999b8c2"},{"condition":"NoMatch","transition":"025df89c-5036-4627-b7a0-0ba3e999b8c2"},{"condition":"Error","transition":"025df89c-5036-4627-b7a0-0ba3e999b8c2"}],"parameters":[{"name":"Text","value":"commuter","namespace":"External"},{"name":"TextToSpeechType","value":"ssml"},{"name":"Timeout","value":"1"},{"name":"MaxDigits","value":"1"}],"metadata":{"position":{"x":1870,"y":717.5980580054606},"conditionMetadata":[{"id":"379751ca-c0e6-4dbf-84b3-7f17ae05e359","value":"9"}],"useDynamic":true},"target":"Digits"},{"id":"b8839179-7ddc-4e4c-befc-f2b356445738","type":"GetUserInput","branches":[{"condition":"Evaluate","conditionType":"Equals","conditionValue":"9","transition":"e3ef239d-ad61-463e-bbd8-b14c34362a88"},{"condition":"Timeout","transition":"025df89c-5036-4627-b7a0-0ba3e999b8c2"},{"condition":"NoMatch","transition":"025df89c-5036-4627-b7a0-0ba3e999b8c2"},{"condition":"Error","transition":"025df89c-5036-4627-b7a0-0ba3e999b8c2"}],"parameters":[{"name":"Text","value":"orange","namespace":"External"},{"name":"TextToSpeechType","value":"ssml"},{"name":"Timeout","value":"1"},{"name":"MaxDigits","value":"1"}],"metadata":{"position":{"x":2227,"y":287},"conditionMetadata":[{"id":"feddca92-66bb-46e2-a45e-5ebd6f80f6e8","value":"9"}],"useDynamic":true},"target":"Digits"},{"id":"33b1deb0-2bec-40b5-b5e3-502b292e94ba","type":"GetUserInput","branches":[{"condition":"Evaluate","conditionType":"Equals","conditionValue":"9","transition":"e3ef239d-ad61-463e-bbd8-b14c34362a88"},{"condition":"Timeout","transition":"025df89c-5036-4627-b7a0-0ba3e999b8c2"},{"condition":"NoMatch","transition":"025df89c-5036-4627-b7a0-0ba3e999b8c2"},{"condition":"Error","transition":"025df89c-5036-4627-b7a0-0ba3e999b8c2"}],"parameters":[{"name":"Text","value":"green","namespace":"External"},{"name":"TextToSpeechType","value":"ssml"},{"name":"Timeout","value":"1"},{"name":"MaxDigits","value":"1"}],"metadata":{"position":{"x":2228,"y":555},"conditionMetadata":[{"id":"bd3be66e-7634-40ef-92bc-7b1b3ba8e4df","value":"9"}],"useDynamic":true},"target":"Digits"},{"id":"43bba9b9-fddb-4fb7-acb2-0575ac413964","type":"GetUserInput","branches":[{"condition":"Evaluate","conditionType":"Equals","conditionValue":"9","transition":"e3ef239d-ad61-463e-bbd8-b14c34362a88"},{"condition":"Timeout","transition":"025df89c-5036-4627-b7a0-0ba3e999b8c2"},{"condition":"NoMatch","transition":"025df89c-5036-4627-b7a0-0ba3e999b8c2"},{"condition":"Error","transition":"025df89c-5036-4627-b7a0-0ba3e999b8c2"}],"parameters":[{"name":"Text","value":"blue","namespace":"External"},{"name":"TextToSpeechType","value":"ssml"},{"name":"Timeout","value":"1"},{"name":"MaxDigits","value":"1"}],"metadata":{"position":{"x":2222,"y":834},"conditionMetadata":[{"id":"2b5a9690-6267-446e-942f-70ae71c50d8e","value":"9"}],"useDynamic":true},"target":"Digits"},{"id":"26e30010-50fb-42df-a6b2-ea51b62c38a5","type":"GetUserInput","branches":[{"condition":"Evaluate","conditionType":"Equals","conditionValue":"9","transition":"e3ef239d-ad61-463e-bbd8-b14c34362a88"},{"condition":"Timeout","transition":"025df89c-5036-4627-b7a0-0ba3e999b8c2"},{"condition":"NoMatch","transition":"025df89c-5036-4627-b7a0-0ba3e999b8c2"},{"condition":"Error","transition":"025df89c-5036-4627-b7a0-0ba3e999b8c2"}],"parameters":[{"name":"Text","value":"red","namespace":"External"},{"name":"TextToSpeechType","value":"ssml"},{"name":"Timeout","value":"1"},{"name":"MaxDigits","value":"1"}],"metadata":{"position":{"x":2223,"y":15.5},"conditionMetadata":[{"id":"e8eb793b-ca99-42ec-83ae-d3c73bae21c6","value":"9"}],"useDynamic":true},"target":"Digits"},{"id":"e3ef239d-ad61-463e-bbd8-b14c34362a88","type":"Loop","branches":[{"condition":"Looping","transition":"864985be-4aa7-4c5f-ba40-638da53f09d0"},{"condition":"Complete","transition":"025df89c-5036-4627-b7a0-0ba3e999b8c2"}],"parameters":[{"name":"LoopCount","value":"10"}],"metadata":{"position":{"x":1307,"y":695.8029243487802},"useDynamic":false}},{"id":"864985be-4aa7-4c5f-ba40-638da53f09d0","type":"CheckAttribute","branches":[{"condition":"Evaluate","conditionType":"Equals","conditionValue":"1","transition":"26e30010-50fb-42df-a6b2-ea51b62c38a5"},{"condition":"Evaluate","conditionType":"Equals","conditionValue":"2","transition":"b8839179-7ddc-4e4c-befc-f2b356445738"},{"condition":"Evaluate","conditionType":"Equals","conditionValue":"3","transition":"33b1deb0-2bec-40b5-b5e3-502b292e94ba"},{"condition":"Evaluate","conditionType":"Equals","conditionValue":"4","transition":"43bba9b9-fddb-4fb7-acb2-0575ac413964"},{"condition":"Evaluate","conditionType":"Equals","conditionValue":"5","transition":"93ec5f16-a5cb-49f5-9f1d-fcff0642b856"},{"condition":"Evaluate","conditionType":"Equals","conditionValue":"6","transition":"ff737200-4608-467e-95e6-6d2d5a3f116d"},{"condition":"NoMatch","transition":"025df89c-5036-4627-b7a0-0ba3e999b8c2"}],"parameters":[{"name":"Attribute","value":"line_choice"},{"name":"Namespace","value":"User Defined"}],"metadata":{"position":{"x":1567,"y":21},"conditionMetadata":[{"id":"bfc45702-3ba3-4c93-8a58-0996654f2945","operator":{"name":"Equals","value":"Equals","shortDisplay":"="},"value":"1"},{"id":"56644aa9-04ba-4523-806e-b347385d1a6f","operator":{"name":"Equals","value":"Equals","shortDisplay":"="},"value":"2"},{"id":"5ed0bc7b-d7af-4f5c-815a-6bf7fe926c10","operator":{"name":"Equals","value":"Equals","shortDisplay":"="},"value":"3"},{"id":"aa505e28-96db-43a3-8b44-12070cecfe37","operator":{"name":"Equals","value":"Equals","shortDisplay":"="},"value":"4"},{"id":"30e8ce40-66ea-405f-8a9e-ed834249ddf2","operator":{"name":"Equals","value":"Equals","shortDisplay":"="},"value":"5"},{"id":"b5a5cd72-34fa-4c1a-80bf-09c1988702b0","operator":{"name":"Equals","value":"Equals","shortDisplay":"="},"value":"6"}]}},{"id":"93ec5f16-a5cb-49f5-9f1d-fcff0642b856","type":"GetUserInput","branches":[{"condition":"Evaluate","conditionType":"Equals","conditionValue":"9","transition":"e3ef239d-ad61-463e-bbd8-b14c34362a88"},{"condition":"Timeout","transition":"025df89c-5036-4627-b7a0-0ba3e999b8c2"},{"condition":"NoMatch","transition":"025df89c-5036-4627-b7a0-0ba3e999b8c2"},{"condition":"Error","transition":"025df89c-5036-4627-b7a0-0ba3e999b8c2"}],"parameters":[{"name":"Text","value":"silver","namespace":"External"},{"name":"TextToSpeechType","value":"ssml"},{"name":"Timeout","value":"1"},{"name":"MaxDigits","value":"1"}],"metadata":{"position":{"x":1872,"y":435},"conditionMetadata":[{"id":"9658bc54-ac52-4b91-934c-83322ec83cda","value":"9"}],"useDynamic":true},"target":"Digits"},{"id":"025df89c-5036-4627-b7a0-0ba3e999b8c2","type":"Loop","branches":[{"condition":"Looping","transition":"51aed40c-bdb7-4046-9022-df97d8f918a7"},{"condition":"Complete","transition":"b07e1f8f-a47b-4636-abe9-5d0933c28abd"}],"parameters":[{"name":"LoopCount","value":"10"}],"metadata":{"position":{"x":2362,"y":1279.5980580054606},"useDynamic":false}},{"id":"a4f6b0d8-e03d-43fc-b000-75e52e028b70","type":"Transfer","branches":[{"condition":"Success","transition":"b07e1f8f-a47b-4636-abe9-5d0933c28abd"},{"condition":"CallFailure","transition":"b07e1f8f-a47b-4636-abe9-5d0933c28abd"},{"condition":"Timeout","transition":"b07e1f8f-a47b-4636-abe9-5d0933c28abd"},{"condition":"Error","transition":"b07e1f8f-a47b-4636-abe9-5d0933c28abd"}],"parameters":[{"name":"TimeLimit","value":"30"},{"name":"BlindTransfer","value":false},{"name":"PhoneNumber","value":"+1617-222-3200"}],"metadata":{"position":{"x":405,"y":451},"CountryCode":"us"},"target":"PhoneNumber"},{"id":"378e525e-29ef-471b-b0a1-14b69e61f41e","type":"InvokeExternalResource","branches":[{"condition":"Success","transition":"88b8dfd5-2a0c-48b9-9004-781705cdd951"},{"condition":"Error","transition":"a7e9ad86-446d-4297-bee5-dad34db002a5"}],"parameters":[{"name":"FunctionArn","value":"arn:aws:lambda:us-east-1:434035161053:function:elevator-hotline-prod","namespace":null},{"name":"TimeLimit","value":"8"}],"metadata":{"position":{"x":65,"y":187.59805800546067},"dynamicMetadata":{},"useDynamic":false},"target":"Lambda"},{"id":"a7e9ad86-446d-4297-bee5-dad34db002a5","type":"PlayPrompt","branches":[{"condition":"Success","transition":"a4f6b0d8-e03d-43fc-b000-75e52e028b70"}],"parameters":[{"name":"Text","value":"Hello, you have reached the MBTA's elevator and escalator out-of-service update line. \n\nWe are currently experiencing some technical difficulties, and are now attempting to transfer you to a representative at number 617-222-3200","namespace":null},{"name":"TextToSpeechType","value":"text"}],"metadata":{"position":{"x":448,"y":256},"useDynamic":false}},{"id":"7a68c1c0-f93e-4322-afcb-a3ac4057f254","type":"SetAttributes","branches":[{"condition":"Success","transition":"a93e74a8-355c-4b7c-9e86-a69f889095ce"},{"condition":"Error","transition":"025df89c-5036-4627-b7a0-0ba3e999b8c2"}],"parameters":[{"name":"Attribute","value":"Stored customer input","key":"line_choice","namespace":"System"}],"metadata":{"position":{"x":984,"y":49.59805800546067}}},{"id":"51aed40c-bdb7-4046-9022-df97d8f918a7","type":"StoreUserInput","branches":[{"condition":"Success","transition":"7a68c1c0-f93e-4322-afcb-a3ac4057f254"},{"condition":"Error","transition":"025df89c-5036-4627-b7a0-0ba3e999b8c2"}],"parameters":[{"name":"Text","value":"For outages affecting the red line, press one.\nFor outages affecting the orange line, press two.\nFor outages affecting the green line, press three.\nFor outages affecting the blue line, press four.\nFor outages affecting the silver line, press five.\nFor outages affecting the commuter rail, press six.\nPress 9 to repeat the previous alerts or 0 to return to the main menu at any time."},{"name":"TextToSpeechType","value":"text"},{"name":"CustomerInputType","value":"Custom"},{"name":"Timeout","value":"6"},{"name":"MaxDigits","value":1},{"name":"EncryptEntry","value":"false"},{"name":"DisableCancel","value":"false"}],"metadata":{"position":{"x":763,"y":972},"useDynamic":false,"useDynamicForEncryptionKeys":true,"useDynamicForTerminatorDigits":false,"countryCodePrefix":"+1"}},{"id":"88b8dfd5-2a0c-48b9-9004-781705cdd951","type":"CheckAttribute","branches":[{"condition":"Evaluate","conditionType":"Equals","conditionValue":"200","transition":"7ec8cd24-a8a2-44bf-a130-d0d9e33ee010"},{"condition":"NoMatch","transition":"a7e9ad86-446d-4297-bee5-dad34db002a5"}],"parameters":[{"name":"Attribute","value":"status"},{"name":"Namespace","value":"External"}],"metadata":{"position":{"x":420,"y":30.598058005460672},"conditionMetadata":[{"id":"44e1aebc-3e84-4320-b676-2d9502e520f2","operator":{"name":"Equals","value":"Equals","shortDisplay":"="},"value":"200"}]}},{"id":"7ec8cd24-a8a2-44bf-a130-d0d9e33ee010","type":"StoreUserInput","branches":[{"condition":"Success","transition":"7a68c1c0-f93e-4322-afcb-a3ac4057f254"},{"condition":"Error","transition":"51aed40c-bdb7-4046-9022-df97d8f918a7"}],"parameters":[{"name":"Text","value":"Hello, you have reached the MBTA's elevator and escalator out-of-service update line. This recording is updated in real time.\n\nFor outages affecting the red line, press one.\nFor outages affecting the orange line, press two.\nFor outages affecting the green line, press three.\nFor outages affecting the blue line, press four.\nFor outages affecting the silver line, press five.\nFor outages affecting the commuter rail, press six.\nPress 9 to repeat the previous alerts or 0 to return to the main menu at any time.","namespace":null},{"name":"TextToSpeechType","value":"text"},{"name":"CustomerInputType","value":"Custom"},{"name":"Timeout","value":"6"},{"name":"MaxDigits","value":1},{"name":"EncryptEntry","value":false},{"name":"DisableCancel","value":"false"}],"metadata":{"position":{"x":681,"y":28},"useDynamic":false,"useDynamicForEncryptionKeys":true,"useDynamicForTerminatorDigits":false,"countryCodePrefix":"+1"}}],"version":"1","type":"contactFlow","start":"6c745c27-6c4d-4eb1-87fa-6986c7e785b7","metadata":{"entryPointPosition":{"x":15.500339628716162,"y":18.09805800546067},"snapToGrid":false,"name":"MBTA Elevator Hotline","description":null,"type":"contactFlow","status":"published","hash":"f91a956117b0ef9ddb3f1726a1f95bf36f1f5e186c4e416bc1dbaa4cf2b2c077"}}
+{
+  "modules": [
+    {
+      "id": "6c745c27-6c4d-4eb1-87fa-6986c7e785b7",
+      "type": "SetLoggingBehavior",
+      "branches": [
+        {
+          "condition": "Success",
+          "transition": "378e525e-29ef-471b-b0a1-14b69e61f41e"
+        }
+      ],
+      "parameters": [{ "name": "LoggingBehavior", "value": "Enable" }],
+      "metadata": { "position": { "x": 141, "y": 20.59805800546067 } }
+    },
+    {
+      "id": "52e502c3-221e-4fad-a4db-9892481f2116",
+      "type": "Disconnect",
+      "branches": [],
+      "parameters": [],
+      "metadata": { "position": { "x": 446, "y": 1012 } }
+    },
+    {
+      "id": "b07e1f8f-a47b-4636-abe9-5d0933c28abd",
+      "type": "PlayPrompt",
+      "branches": [
+        {
+          "condition": "Success",
+          "transition": "52e502c3-221e-4fad-a4db-9892481f2116"
+        }
+      ],
+      "parameters": [
+        {
+          "name": "Text",
+          "value": "Thank you for calling. Goodbye.",
+          "namespace": null
+        },
+        { "name": "TextToSpeechType", "value": "text" }
+      ],
+      "metadata": { "position": { "x": 320, "y": 792 }, "useDynamic": false }
+    },
+    {
+      "id": "a93e74a8-355c-4b7c-9e86-a69f889095ce",
+      "type": "SetAttributes",
+      "branches": [
+        {
+          "condition": "Success",
+          "transition": "864985be-4aa7-4c5f-ba40-638da53f09d0"
+        },
+        {
+          "condition": "Error",
+          "transition": "025df89c-5036-4627-b7a0-0ba3e999b8c2"
+        }
+      ],
+      "parameters": [
+        {
+          "name": "Attribute",
+          "value": "line_choice_log$.Attributes.line_choice",
+          "key": "line_choice_log",
+          "namespace": "User Defined"
+        }
+      ],
+      "metadata": { "position": { "x": 1261, "y": 70.59805800546067 } }
+    },
+    {
+      "id": "ff737200-4608-467e-95e6-6d2d5a3f116d",
+      "type": "GetUserInput",
+      "branches": [
+        {
+          "condition": "Evaluate",
+          "conditionType": "Equals",
+          "conditionValue": "9",
+          "transition": "e3ef239d-ad61-463e-bbd8-b14c34362a88"
+        },
+        {
+          "condition": "Timeout",
+          "transition": "025df89c-5036-4627-b7a0-0ba3e999b8c2"
+        },
+        {
+          "condition": "NoMatch",
+          "transition": "025df89c-5036-4627-b7a0-0ba3e999b8c2"
+        },
+        {
+          "condition": "Error",
+          "transition": "025df89c-5036-4627-b7a0-0ba3e999b8c2"
+        }
+      ],
+      "parameters": [
+        { "name": "Text", "value": "commuter", "namespace": "External" },
+        { "name": "TextToSpeechType", "value": "ssml" },
+        { "name": "Timeout", "value": "1" },
+        { "name": "MaxDigits", "value": "1" }
+      ],
+      "metadata": {
+        "position": { "x": 1870, "y": 717.5980580054606 },
+        "conditionMetadata": [
+          { "id": "379751ca-c0e6-4dbf-84b3-7f17ae05e359", "value": "9" }
+        ],
+        "useDynamic": true
+      },
+      "target": "Digits"
+    },
+    {
+      "id": "b8839179-7ddc-4e4c-befc-f2b356445738",
+      "type": "GetUserInput",
+      "branches": [
+        {
+          "condition": "Evaluate",
+          "conditionType": "Equals",
+          "conditionValue": "9",
+          "transition": "e3ef239d-ad61-463e-bbd8-b14c34362a88"
+        },
+        {
+          "condition": "Timeout",
+          "transition": "025df89c-5036-4627-b7a0-0ba3e999b8c2"
+        },
+        {
+          "condition": "NoMatch",
+          "transition": "025df89c-5036-4627-b7a0-0ba3e999b8c2"
+        },
+        {
+          "condition": "Error",
+          "transition": "025df89c-5036-4627-b7a0-0ba3e999b8c2"
+        }
+      ],
+      "parameters": [
+        { "name": "Text", "value": "orange", "namespace": "External" },
+        { "name": "TextToSpeechType", "value": "ssml" },
+        { "name": "Timeout", "value": "1" },
+        { "name": "MaxDigits", "value": "1" }
+      ],
+      "metadata": {
+        "position": { "x": 2227, "y": 287 },
+        "conditionMetadata": [
+          { "id": "feddca92-66bb-46e2-a45e-5ebd6f80f6e8", "value": "9" }
+        ],
+        "useDynamic": true
+      },
+      "target": "Digits"
+    },
+    {
+      "id": "33b1deb0-2bec-40b5-b5e3-502b292e94ba",
+      "type": "GetUserInput",
+      "branches": [
+        {
+          "condition": "Evaluate",
+          "conditionType": "Equals",
+          "conditionValue": "9",
+          "transition": "e3ef239d-ad61-463e-bbd8-b14c34362a88"
+        },
+        {
+          "condition": "Timeout",
+          "transition": "025df89c-5036-4627-b7a0-0ba3e999b8c2"
+        },
+        {
+          "condition": "NoMatch",
+          "transition": "025df89c-5036-4627-b7a0-0ba3e999b8c2"
+        },
+        {
+          "condition": "Error",
+          "transition": "025df89c-5036-4627-b7a0-0ba3e999b8c2"
+        }
+      ],
+      "parameters": [
+        { "name": "Text", "value": "green", "namespace": "External" },
+        { "name": "TextToSpeechType", "value": "ssml" },
+        { "name": "Timeout", "value": "1" },
+        { "name": "MaxDigits", "value": "1" }
+      ],
+      "metadata": {
+        "position": { "x": 2228, "y": 555 },
+        "conditionMetadata": [
+          { "id": "bd3be66e-7634-40ef-92bc-7b1b3ba8e4df", "value": "9" }
+        ],
+        "useDynamic": true
+      },
+      "target": "Digits"
+    },
+    {
+      "id": "43bba9b9-fddb-4fb7-acb2-0575ac413964",
+      "type": "GetUserInput",
+      "branches": [
+        {
+          "condition": "Evaluate",
+          "conditionType": "Equals",
+          "conditionValue": "9",
+          "transition": "e3ef239d-ad61-463e-bbd8-b14c34362a88"
+        },
+        {
+          "condition": "Timeout",
+          "transition": "025df89c-5036-4627-b7a0-0ba3e999b8c2"
+        },
+        {
+          "condition": "NoMatch",
+          "transition": "025df89c-5036-4627-b7a0-0ba3e999b8c2"
+        },
+        {
+          "condition": "Error",
+          "transition": "025df89c-5036-4627-b7a0-0ba3e999b8c2"
+        }
+      ],
+      "parameters": [
+        { "name": "Text", "value": "blue", "namespace": "External" },
+        { "name": "TextToSpeechType", "value": "ssml" },
+        { "name": "Timeout", "value": "1" },
+        { "name": "MaxDigits", "value": "1" }
+      ],
+      "metadata": {
+        "position": { "x": 2222, "y": 834 },
+        "conditionMetadata": [
+          { "id": "2b5a9690-6267-446e-942f-70ae71c50d8e", "value": "9" }
+        ],
+        "useDynamic": true
+      },
+      "target": "Digits"
+    },
+    {
+      "id": "26e30010-50fb-42df-a6b2-ea51b62c38a5",
+      "type": "GetUserInput",
+      "branches": [
+        {
+          "condition": "Evaluate",
+          "conditionType": "Equals",
+          "conditionValue": "9",
+          "transition": "e3ef239d-ad61-463e-bbd8-b14c34362a88"
+        },
+        {
+          "condition": "Timeout",
+          "transition": "025df89c-5036-4627-b7a0-0ba3e999b8c2"
+        },
+        {
+          "condition": "NoMatch",
+          "transition": "025df89c-5036-4627-b7a0-0ba3e999b8c2"
+        },
+        {
+          "condition": "Error",
+          "transition": "025df89c-5036-4627-b7a0-0ba3e999b8c2"
+        }
+      ],
+      "parameters": [
+        { "name": "Text", "value": "red", "namespace": "External" },
+        { "name": "TextToSpeechType", "value": "ssml" },
+        { "name": "Timeout", "value": "1" },
+        { "name": "MaxDigits", "value": "1" }
+      ],
+      "metadata": {
+        "position": { "x": 2223, "y": 15.5 },
+        "conditionMetadata": [
+          { "id": "e8eb793b-ca99-42ec-83ae-d3c73bae21c6", "value": "9" }
+        ],
+        "useDynamic": true
+      },
+      "target": "Digits"
+    },
+    {
+      "id": "e3ef239d-ad61-463e-bbd8-b14c34362a88",
+      "type": "Loop",
+      "branches": [
+        {
+          "condition": "Looping",
+          "transition": "864985be-4aa7-4c5f-ba40-638da53f09d0"
+        },
+        {
+          "condition": "Complete",
+          "transition": "025df89c-5036-4627-b7a0-0ba3e999b8c2"
+        }
+      ],
+      "parameters": [{ "name": "LoopCount", "value": "10" }],
+      "metadata": {
+        "position": { "x": 1307, "y": 695.8029243487802 },
+        "useDynamic": false
+      }
+    },
+    {
+      "id": "864985be-4aa7-4c5f-ba40-638da53f09d0",
+      "type": "CheckAttribute",
+      "branches": [
+        {
+          "condition": "Evaluate",
+          "conditionType": "Equals",
+          "conditionValue": "1",
+          "transition": "26e30010-50fb-42df-a6b2-ea51b62c38a5"
+        },
+        {
+          "condition": "Evaluate",
+          "conditionType": "Equals",
+          "conditionValue": "2",
+          "transition": "b8839179-7ddc-4e4c-befc-f2b356445738"
+        },
+        {
+          "condition": "Evaluate",
+          "conditionType": "Equals",
+          "conditionValue": "3",
+          "transition": "33b1deb0-2bec-40b5-b5e3-502b292e94ba"
+        },
+        {
+          "condition": "Evaluate",
+          "conditionType": "Equals",
+          "conditionValue": "4",
+          "transition": "43bba9b9-fddb-4fb7-acb2-0575ac413964"
+        },
+        {
+          "condition": "Evaluate",
+          "conditionType": "Equals",
+          "conditionValue": "5",
+          "transition": "93ec5f16-a5cb-49f5-9f1d-fcff0642b856"
+        },
+        {
+          "condition": "Evaluate",
+          "conditionType": "Equals",
+          "conditionValue": "6",
+          "transition": "ff737200-4608-467e-95e6-6d2d5a3f116d"
+        },
+        {
+          "condition": "NoMatch",
+          "transition": "025df89c-5036-4627-b7a0-0ba3e999b8c2"
+        }
+      ],
+      "parameters": [
+        { "name": "Attribute", "value": "line_choice" },
+        { "name": "Namespace", "value": "User Defined" }
+      ],
+      "metadata": {
+        "position": { "x": 1567, "y": 21 },
+        "conditionMetadata": [
+          {
+            "id": "bfc45702-3ba3-4c93-8a58-0996654f2945",
+            "operator": {
+              "name": "Equals",
+              "value": "Equals",
+              "shortDisplay": "="
+            },
+            "value": "1"
+          },
+          {
+            "id": "56644aa9-04ba-4523-806e-b347385d1a6f",
+            "operator": {
+              "name": "Equals",
+              "value": "Equals",
+              "shortDisplay": "="
+            },
+            "value": "2"
+          },
+          {
+            "id": "5ed0bc7b-d7af-4f5c-815a-6bf7fe926c10",
+            "operator": {
+              "name": "Equals",
+              "value": "Equals",
+              "shortDisplay": "="
+            },
+            "value": "3"
+          },
+          {
+            "id": "aa505e28-96db-43a3-8b44-12070cecfe37",
+            "operator": {
+              "name": "Equals",
+              "value": "Equals",
+              "shortDisplay": "="
+            },
+            "value": "4"
+          },
+          {
+            "id": "30e8ce40-66ea-405f-8a9e-ed834249ddf2",
+            "operator": {
+              "name": "Equals",
+              "value": "Equals",
+              "shortDisplay": "="
+            },
+            "value": "5"
+          },
+          {
+            "id": "b5a5cd72-34fa-4c1a-80bf-09c1988702b0",
+            "operator": {
+              "name": "Equals",
+              "value": "Equals",
+              "shortDisplay": "="
+            },
+            "value": "6"
+          }
+        ]
+      }
+    },
+    {
+      "id": "93ec5f16-a5cb-49f5-9f1d-fcff0642b856",
+      "type": "GetUserInput",
+      "branches": [
+        {
+          "condition": "Evaluate",
+          "conditionType": "Equals",
+          "conditionValue": "9",
+          "transition": "e3ef239d-ad61-463e-bbd8-b14c34362a88"
+        },
+        {
+          "condition": "Timeout",
+          "transition": "025df89c-5036-4627-b7a0-0ba3e999b8c2"
+        },
+        {
+          "condition": "NoMatch",
+          "transition": "025df89c-5036-4627-b7a0-0ba3e999b8c2"
+        },
+        {
+          "condition": "Error",
+          "transition": "025df89c-5036-4627-b7a0-0ba3e999b8c2"
+        }
+      ],
+      "parameters": [
+        { "name": "Text", "value": "silver", "namespace": "External" },
+        { "name": "TextToSpeechType", "value": "ssml" },
+        { "name": "Timeout", "value": "1" },
+        { "name": "MaxDigits", "value": "1" }
+      ],
+      "metadata": {
+        "position": { "x": 1872, "y": 435 },
+        "conditionMetadata": [
+          { "id": "9658bc54-ac52-4b91-934c-83322ec83cda", "value": "9" }
+        ],
+        "useDynamic": true
+      },
+      "target": "Digits"
+    },
+    {
+      "id": "025df89c-5036-4627-b7a0-0ba3e999b8c2",
+      "type": "Loop",
+      "branches": [
+        {
+          "condition": "Looping",
+          "transition": "51aed40c-bdb7-4046-9022-df97d8f918a7"
+        },
+        {
+          "condition": "Complete",
+          "transition": "b07e1f8f-a47b-4636-abe9-5d0933c28abd"
+        }
+      ],
+      "parameters": [{ "name": "LoopCount", "value": "10" }],
+      "metadata": {
+        "position": { "x": 2362, "y": 1279.5980580054606 },
+        "useDynamic": false
+      }
+    },
+    {
+      "id": "a4f6b0d8-e03d-43fc-b000-75e52e028b70",
+      "type": "Transfer",
+      "branches": [
+        {
+          "condition": "Success",
+          "transition": "b07e1f8f-a47b-4636-abe9-5d0933c28abd"
+        },
+        {
+          "condition": "CallFailure",
+          "transition": "b07e1f8f-a47b-4636-abe9-5d0933c28abd"
+        },
+        {
+          "condition": "Timeout",
+          "transition": "b07e1f8f-a47b-4636-abe9-5d0933c28abd"
+        },
+        {
+          "condition": "Error",
+          "transition": "b07e1f8f-a47b-4636-abe9-5d0933c28abd"
+        }
+      ],
+      "parameters": [
+        { "name": "TimeLimit", "value": "30" },
+        { "name": "BlindTransfer", "value": false },
+        { "name": "PhoneNumber", "value": "+1617-222-3200" }
+      ],
+      "metadata": { "position": { "x": 405, "y": 451 }, "CountryCode": "us" },
+      "target": "PhoneNumber"
+    },
+    {
+      "id": "378e525e-29ef-471b-b0a1-14b69e61f41e",
+      "type": "InvokeExternalResource",
+      "branches": [
+        {
+          "condition": "Success",
+          "transition": "88b8dfd5-2a0c-48b9-9004-781705cdd951"
+        },
+        {
+          "condition": "Error",
+          "transition": "a7e9ad86-446d-4297-bee5-dad34db002a5"
+        }
+      ],
+      "parameters": [
+        {
+          "name": "FunctionArn",
+          "value": "arn:aws:lambda:us-east-1:434035161053:function:elevator-hotline-prod",
+          "namespace": null
+        },
+        { "name": "TimeLimit", "value": "8" }
+      ],
+      "metadata": {
+        "position": { "x": 65, "y": 187.59805800546067 },
+        "dynamicMetadata": {},
+        "useDynamic": false
+      },
+      "target": "Lambda"
+    },
+    {
+      "id": "a7e9ad86-446d-4297-bee5-dad34db002a5",
+      "type": "PlayPrompt",
+      "branches": [
+        {
+          "condition": "Success",
+          "transition": "a4f6b0d8-e03d-43fc-b000-75e52e028b70"
+        }
+      ],
+      "parameters": [
+        {
+          "name": "Text",
+          "value": "Hello, you have reached the MBTA's elevator and escalator out-of-service update line. \n\nWe are currently experiencing some technical difficulties, and are now attempting to transfer you to a representative at number 617-222-3200",
+          "namespace": null
+        },
+        { "name": "TextToSpeechType", "value": "text" }
+      ],
+      "metadata": { "position": { "x": 448, "y": 256 }, "useDynamic": false }
+    },
+    {
+      "id": "7a68c1c0-f93e-4322-afcb-a3ac4057f254",
+      "type": "SetAttributes",
+      "branches": [
+        {
+          "condition": "Success",
+          "transition": "a93e74a8-355c-4b7c-9e86-a69f889095ce"
+        },
+        {
+          "condition": "Error",
+          "transition": "025df89c-5036-4627-b7a0-0ba3e999b8c2"
+        }
+      ],
+      "parameters": [
+        {
+          "name": "Attribute",
+          "value": "Stored customer input",
+          "key": "line_choice",
+          "namespace": "System"
+        }
+      ],
+      "metadata": { "position": { "x": 984, "y": 49.59805800546067 } }
+    },
+    {
+      "id": "51aed40c-bdb7-4046-9022-df97d8f918a7",
+      "type": "StoreUserInput",
+      "branches": [
+        {
+          "condition": "Success",
+          "transition": "7a68c1c0-f93e-4322-afcb-a3ac4057f254"
+        },
+        {
+          "condition": "Error",
+          "transition": "025df89c-5036-4627-b7a0-0ba3e999b8c2"
+        }
+      ],
+      "parameters": [
+        {
+          "name": "Text",
+          "value": "For outages affecting the red line, press one.\nFor outages affecting the orange line, press two.\nFor outages affecting the green line, press three.\nFor outages affecting the blue line, press four.\nFor outages affecting the silver line, press five.\nFor outages affecting the commuter rail, press six.\nPress 9 to repeat the previous alerts or 0 to return to the main menu at any time."
+        },
+        { "name": "TextToSpeechType", "value": "text" },
+        { "name": "CustomerInputType", "value": "Custom" },
+        { "name": "Timeout", "value": "6" },
+        { "name": "MaxDigits", "value": 1 },
+        { "name": "EncryptEntry", "value": "false" },
+        { "name": "DisableCancel", "value": "false" }
+      ],
+      "metadata": {
+        "position": { "x": 763, "y": 972 },
+        "useDynamic": false,
+        "useDynamicForEncryptionKeys": true,
+        "useDynamicForTerminatorDigits": false,
+        "countryCodePrefix": "+1"
+      }
+    },
+    {
+      "id": "88b8dfd5-2a0c-48b9-9004-781705cdd951",
+      "type": "CheckAttribute",
+      "branches": [
+        {
+          "condition": "Evaluate",
+          "conditionType": "Equals",
+          "conditionValue": "200",
+          "transition": "7ec8cd24-a8a2-44bf-a130-d0d9e33ee010"
+        },
+        {
+          "condition": "NoMatch",
+          "transition": "a7e9ad86-446d-4297-bee5-dad34db002a5"
+        }
+      ],
+      "parameters": [
+        { "name": "Attribute", "value": "status" },
+        { "name": "Namespace", "value": "External" }
+      ],
+      "metadata": {
+        "position": { "x": 420, "y": 30.598058005460672 },
+        "conditionMetadata": [
+          {
+            "id": "44e1aebc-3e84-4320-b676-2d9502e520f2",
+            "operator": {
+              "name": "Equals",
+              "value": "Equals",
+              "shortDisplay": "="
+            },
+            "value": "200"
+          }
+        ]
+      }
+    },
+    {
+      "id": "7ec8cd24-a8a2-44bf-a130-d0d9e33ee010",
+      "type": "StoreUserInput",
+      "branches": [
+        {
+          "condition": "Success",
+          "transition": "7a68c1c0-f93e-4322-afcb-a3ac4057f254"
+        },
+        {
+          "condition": "Error",
+          "transition": "51aed40c-bdb7-4046-9022-df97d8f918a7"
+        }
+      ],
+      "parameters": [
+        {
+          "name": "Text",
+          "value": "Hello, you have reached the MBTA's elevator and escalator out-of-service update line. This recording is updated in real time.\n\nFor outages affecting the red line, press one.\nFor outages affecting the orange line, press two.\nFor outages affecting the green line, press three.\nFor outages affecting the blue line, press four.\nFor outages affecting the silver line, press five.\nFor outages affecting the commuter rail, press six.\nPress 9 to repeat the previous alerts or 0 to return to the main menu at any time.",
+          "namespace": null
+        },
+        { "name": "TextToSpeechType", "value": "text" },
+        { "name": "CustomerInputType", "value": "Custom" },
+        { "name": "Timeout", "value": "6" },
+        { "name": "MaxDigits", "value": 1 },
+        { "name": "EncryptEntry", "value": false },
+        { "name": "DisableCancel", "value": "false" }
+      ],
+      "metadata": {
+        "position": { "x": 681, "y": 28 },
+        "useDynamic": false,
+        "useDynamicForEncryptionKeys": true,
+        "useDynamicForTerminatorDigits": false,
+        "countryCodePrefix": "+1"
+      }
+    }
+  ],
+  "version": "1",
+  "type": "contactFlow",
+  "start": "6c745c27-6c4d-4eb1-87fa-6986c7e785b7",
+  "metadata": {
+    "entryPointPosition": { "x": 15.500339628716162, "y": 18.09805800546067 },
+    "snapToGrid": false,
+    "name": "MBTA Elevator Hotline",
+    "description": null,
+    "type": "contactFlow",
+    "status": "published",
+    "hash": "f91a956117b0ef9ddb3f1726a1f95bf36f1f5e186c4e416bc1dbaa4cf2b2c077"
+  }
+}

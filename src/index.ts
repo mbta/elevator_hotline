@@ -13,6 +13,7 @@ function initHandler(lambdaHandler: typeof lambda) {
     const fs = require("fs");
 
     dotenv.config();
+
     if (fs.existsSync(".env.override")) {
       const envConfig = dotenv.parse(fs.readFileSync(".env.override"));
       for (const k in envConfig) {
@@ -38,6 +39,7 @@ function initHandler(lambdaHandler: typeof lambda) {
       Sentry.captureException(error);
       await Sentry.flush(2000);
     }
+
     context.succeed({ status: "500" });
     return { status: "500" };
   };

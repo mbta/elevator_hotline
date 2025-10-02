@@ -2,8 +2,7 @@
   "license": "MIT",
   "scripts": {
     "local": "tsx test/local.ts",
-    "prettier": "prettier --write src test",
-    "prettier:check": "prettier --check src test",
+    "format": "prettier --list-different --write .",
     "test": "jest"
   },
   "dependencies": {
@@ -19,7 +18,7 @@
     "dotenv": "^8.2.0",
     "esbuild": "^0.25.10",
     "jest": "^30.2.0",
-    "prettier": "2.0.5",
+    "prettier": "^3.6.2",
     "ts-jest": "^29.4.4",
     "tsx": "^4.20.6",
     "typescript": "^5.9.2"

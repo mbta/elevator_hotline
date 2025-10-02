@@ -9,8 +9,10 @@ export const get = (apiKey: string, stop: string): Promise<Response> => {
   url.searchParams.append("filter[stop]", stop);
   url.searchParams.append("include", "stop");
   url.searchParams.append("api_key", apiKey);
+
   return client.get(url).then((response) => {
     let station = null;
+
     if (response.included && response.included.length != 0) {
       station = response.included.map(
         (included) => included.attributes.name as string
@@ -18,6 +20,7 @@ export const get = (apiKey: string, stop: string): Promise<Response> => {
     }
 
     const allRoutes = response.data.map((route) => route.id);
+
     return { stop: stop, name: station, routes: allRoutes };
   });
 };
