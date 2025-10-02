@@ -1,0 +1,28 @@
+version: 2
+updates:
+  - package-ecosystem: github-actions
+    directory: "/"
+    schedule:
+      interval: daily
+      time: "10:00"
+  - package-ecosystem: npm
+    directory: "/assets"
+    schedule:
+      interval: daily
+      time: "10:00"
+    groups:
+      npm-patches:
+        patterns:
+          - "*"
+        update-types:
+          - "patch"
+      eslint:
+        patterns:
+          - "eslint-*"
+          - "*-eslint"
+          - "@eslint/*"
+      jest:
+        patterns:
+          - "jest"
+          - "ts-jest"
+          - "@types/jest"
