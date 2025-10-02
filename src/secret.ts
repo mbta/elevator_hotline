@@ -5,6 +5,7 @@ export const get = (secretName: string): Promise<string> => {
     AWS.config.update({ region: process.env.AWS_REGION });
 
     const client = new AWS.SecretsManager({});
+
     client.getSecretValue({ SecretId: secretName }, (err, data) => {
       if (err) {
         if (err.code === "ResourceNotFoundException") {

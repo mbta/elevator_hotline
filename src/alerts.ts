@@ -51,6 +51,7 @@ export const get = (apiKey: string): Promise<Response> => {
 
   return client.get(url).then((response) => {
     let alert_entities: Record<string, null> = {};
+
     const alerts = response.data
       .filter((alert) => {
         return (
@@ -82,11 +83,13 @@ export const get = (apiKey: string): Promise<Response> => {
           updatedAt: new Date(attributes.updated_at).getTime(),
         };
       });
+
     if (alerts.length == 0) {
       console.log(
         "Error: alerts returned no alerts when called, probably a problem."
       );
     }
+
     return {
       alerts: alerts,
       entities: Object.keys(alert_entities),
