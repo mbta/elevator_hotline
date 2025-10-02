@@ -1,32 +1,41 @@
-# elevator hotline
+# Elevator Hotline
 
-The MBTA elevator hotline is a service built on top of AWS connect and lambda.
+Provides an automated telephone service which reads out MBTA elevator outages.
 
-## Amazon Connect
+## AWS Connect
 
-The contact flow is included here as hotline_prod.json/hotline_dev.json
+The Connect contact flow is currently not managed in Terraform; the source of
+truth is the AWS dashboard. An export of the flow is committed to this repo as
+`hotline_prod.json` and `hotline_dev.json`. When making changes in Connect, be
+sure to re-export and update the committed files.
 
-<img src="/hotline_dev.png" alt="Hotline IVR"/>
-
-When making changes in amazon connect make sure to export and update the json
-file in the git repo.
+<img src="/hotline_dev.png" alt="Hotline IVR" />
 
 ## AWS Lambda
 
-The lambda is called whenever a call is made to the elevator hotline. It in turn
-calls the mbta api to get the current alerts and then the affected stations. It
-then builds a payload broken up by line for the ivr.
+The Lambda function in this repo is called by the Connect contact flow when a
+user calls the hotline. It in turn calls the V3 API to get current alerts and
+affected stations, returning a set of voice lines to Connect.
 
-To run the lambda locally, put an api key in .env.override as API_KEY
+### Setup
 
-First install the dependencies by running
+1. Clone this repo
+1. Install [`asdf`](https://github.com/asdf-vm/asdf)
+1. Install [`direnv`](https://direnv.net/)
+1. `asdf plugin add nodejs`
+1. `asdf install`
+1. `cp .envrc.template .envrc`
+1. `direnv allow`
+1. `npm install`
 
-```
-npm install
-```
+### Development
 
-then run
+- `npm test`: Run tests
+- `npm run local`: Run the Lambda locally and print output
+  - This requires filling in `API_KEY` in `.envrc` with a [V3 API key][api].
+    Check [Notion][1p-secrets] for ways to do this securely, without storing the
+    key unencrypted.
 
-```
-npm run local
-```
+[api]: https://api-v3.mbta.com/
+[1p-secrets]:
+  https://www.notion.so/mbta-downtown-crossing/Loading-Secrets-from-1Password-into-Applications-101aa4debcb24372bdc3835918404c93#101aa4debcb24372bdc3835918404c93

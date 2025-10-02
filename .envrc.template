@@ -1,0 +1,14 @@
+# Example environment configuration file. Copy to `.envrc` (this is gitignored)
+# and fill in any additional values you need. Will be automatically loaded and
+# unloaded by `direnv` if installed, or execute manually using `source .envrc`.
+
+export API_KEY=
+export LINE_BLUE="Blue"
+export LINE_COMMUTER="CR-Fairmount, CR-Fitchburg, CR-Worcester, CR-Franklin, CR-Greenbush, CR-Haverhill, CR-Kingston, CR-Lowell, CR-NewBedford, CR-Needham, CR-Newburyport, CR-Providence, CR-Foxboro"
+export LINE_GREEN="Green-B, Green-C, Green-D, Green-E"
+export LINE_ORANGE="Orange"
+export LINE_RED="Red, Mattapan"
+export LINE_SILVER="741, 742, 743, 749, 751"
+export MBTA_API="https://api-v3.mbta.com"
+export NODE_ENV="local"
+export OPERATIONAL_MESSAGE="Currently there are no outages reported for the "
