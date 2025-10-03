@@ -43,7 +43,9 @@ jobs:
     steps:
       - uses: actions/checkout@v5
       - uses: ./.github/actions/setup
-      - run: npm test
+      - run: |
+          source .envrc.template
+          npm test
 
   types:
     name: Check types
