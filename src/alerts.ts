@@ -50,7 +50,7 @@ export const get = (apiKey: string): Promise<Response> => {
   url.searchParams.append("api_key", apiKey);
 
   return client.get(url).then((response) => {
-    let alert_entities: Record<string, null> = {};
+    const alert_entities: Record<string, null> = {};
 
     const alerts = response.data
       .filter((alert) => {

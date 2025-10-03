@@ -31,6 +31,9 @@ affected stations, returning a set of voice lines to Connect.
 ### Development
 
 - `npm test`: Run tests
+- `npm run format`: Format code
+- `npx tsc`: Check types
+- `npx eslint .`: Run lint checks
 - `npm run local`: Run the Lambda locally and print output
   - This requires filling in `API_KEY` in `.envrc` with a [V3 API key][api].
     Check [Notion][1p-secrets] for ways to do this securely, without storing the
