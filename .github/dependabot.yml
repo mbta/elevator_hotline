@@ -6,7 +6,7 @@ updates:
       interval: daily
       time: "10:00"
   - package-ecosystem: npm
-    directory: "/assets"
+    directory: "/"
     schedule:
       interval: daily
       time: "10:00"
