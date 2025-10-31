@@ -18,7 +18,7 @@ jobs:
   deploy:
     name: Deploy dry-run
     runs-on: ubuntu-latest
-    if: github.actor != 'dependabot[bot]'
+    if: github.actor != 'dependabot[bot]' && github.ref_name != 'master'
     permissions:
       id-token: write
       contents: read
