@@ -6,9 +6,7 @@ inputs:
     description: AWS role to assume
     required: true
   dry-run:
-    description: >-
-      If truthy, the deploy will be a dry run, or will not be attempted at all
-      if `aws-role` is blank (instead of erroring)
+    description: If truthy, the deploy will be a dry run
     required: false
     default: ""
   environment:
@@ -30,7 +28,6 @@ runs:
       run: ./build.sh function.zip
 
     - name: Update function code
-      if: ${{ !inputs.dry-run || inputs.aws-role }}
       shell: bash
       run: |
         aws lambda update-function-code \
