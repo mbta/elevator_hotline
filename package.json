@@ -6,7 +6,7 @@
     "test": "jest"
   },
   "dependencies": {
-    "@sentry/node": "^5.17.0",
+    "@sentry/node": "^5.30.0",
     "aws-sdk": "^2.814.0"
   },
   "devDependencies": {
