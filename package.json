@@ -7,7 +7,7 @@
   },
   "dependencies": {
     "@sentry/node": "^5.17.0",
-    "aws-sdk": "^2.814.0"
+    "aws-sdk": "^2.1692.0"
   },
   "devDependencies": {
     "@eslint/js": "^9.36.0",
