@@ -10,6 +10,14 @@ updates:
     schedule:
       interval: daily
       time: "10:00"
+    ignore:
+      # Pin the minor version of Node type definitions so they match the Node
+      # release we're using. (Upgrade this package manually together with actual
+      # Node version upgrades.)
+      - dependency-name: "@types/node"
+        update-types:
+          - "version-update:semver-major"
+          - "version-update:semver-minor"
     groups:
       npm-patches:
         patterns:
