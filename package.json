@@ -6,8 +6,8 @@
     "test": "jest"
   },
   "dependencies": {
-    "@sentry/node": "^10.22.0",
-    "aws-sdk": "^2.1692.0"
+    "@aws-sdk/client-secrets-manager": "^3.922.0",
+    "@sentry/node": "^10.22.0"
   },
   "devDependencies": {
     "@eslint/js": "^9.36.0",
