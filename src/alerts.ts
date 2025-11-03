@@ -84,12 +84,6 @@ export const get = (apiKey: string): Promise<Response> => {
         };
       });
 
-    if (alerts.length == 0) {
-      console.log(
-        "Error: alerts returned no alerts when called, probably a problem."
-      );
-    }
-
     return {
       alerts: alerts,
       entities: Object.keys(alert_entities),
