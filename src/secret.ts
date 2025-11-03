@@ -1,25 +1,23 @@
-import AWS from "aws-sdk";
+import {
+  GetSecretValueCommand,
+  SecretsManagerClient,
+} from "@aws-sdk/client-secrets-manager";
 
 export const get = (secretName: string): Promise<string> => {
   return new Promise((resolve, reject) => {
-    AWS.config.update({ region: process.env.AWS_REGION });
+    const client = new SecretsManagerClient({ region: process.env.AWS_REGION });
+    const command = new GetSecretValueCommand({ SecretId: secretName });
 
-    const client = new AWS.SecretsManager({});
-
-    client.getSecretValue({ SecretId: secretName }, (err, data) => {
-      if (err) {
-        if (err.code === "ResourceNotFoundException") {
-          console.log(`The requested secret ${secretName} was not found`);
-        } else if (err.code === "InvalidRequestException") {
-          console.log(`The request was invalid due to: ${err.message}`);
-        } else if (err.code === "InvalidParameterException") {
-          console.log(`The request had invalid params: ${err.message}`);
+    client.send(command, (err, data) => {
+      if (data) {
+        if (data.SecretString) {
+          resolve(data.SecretString);
+        } else {
+          reject(new Error("SecretString not present"));
         }
-        reject(err);
-      } else if (data.SecretString) {
-        resolve(data.SecretString);
       } else {
-        reject(new Error("Empty secret"));
+        console.log(`${err.name}: ${err.Message}`);
+        reject(err);
       }
     });
   });
