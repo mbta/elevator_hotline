@@ -1,3 +1,4 @@
+import * as Sentry from "@sentry/node";
 import type { ConnectContactFlowEvent, Context } from "aws-lambda";
 import * as alerts from "./alerts";
 import * as routes from "./routes";
@@ -124,10 +125,9 @@ const lambda = function (_event: ConnectContactFlowEvent, context: Context) {
               }
             });
           } else {
-            console.log(
-              "Error: Alert for a station not in routes " +
-                JSON.stringify(alert)
-            );
+            const message = "Alert for a station not in routes";
+            console.log(`Error: ${message} ${JSON.stringify(alert)}`);
+            Sentry.captureMessage(message, { extra: alert, level: "error" });
           }
 
           return acc;

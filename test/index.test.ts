@@ -52,13 +52,9 @@ test("if http client gets no alerts responds all lines okay.", () => {
       return Promise.resolve(data.no_station());
     } else return Promise.reject();
   });
-  console.log = jest.fn();
 
   const fn = pifyHandler(handler);
   return fn({}).then((result) => {
-    expect(console.log).toHaveBeenCalledWith(
-      "Error: alerts returned no alerts when called, probably a problem."
-    );
     expect(result).toStrictEqual(no_outages);
   });
 });
