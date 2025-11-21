@@ -23,7 +23,7 @@ jobs:
       id-token: write
       contents: read
     steps:
-      - uses: actions/checkout@v5
+      - uses: actions/checkout@v6
       - uses: ./.github/actions/deploy
         with:
           aws-role: ${{ secrets.AWS_ROLE_ARN }}
@@ -34,7 +34,7 @@ jobs:
     name: Check formatting
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v5
+      - uses: actions/checkout@v6
       - uses: ./.github/actions/setup
       - run: npx --no prettier --check .
 
@@ -42,7 +42,7 @@ jobs:
     name: Check lint
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v5
+      - uses: actions/checkout@v6
       - uses: ./.github/actions/setup
       - run: npx --no eslint .
 
@@ -50,7 +50,7 @@ jobs:
     name: Tests
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v5
+      - uses: actions/checkout@v6
       - uses: ./.github/actions/setup
       - run: |
           source .envrc.template
@@ -60,6 +60,6 @@ jobs:
     name: Check types
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v5
+      - uses: actions/checkout@v6
       - uses: ./.github/actions/setup
       - run: npx --no tsc
