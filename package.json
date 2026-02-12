@@ -6,7 +6,7 @@
     "test": "jest"
   },
   "dependencies": {
-    "@aws-sdk/client-secrets-manager": "^3.922.0",
+    "@aws-sdk/client-secrets-manager": "^3.987.0",
     "@sentry/node": "^10.27.0"
   },
   "devDependencies": {
