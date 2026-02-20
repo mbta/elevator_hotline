@@ -10,6 +10,6 @@ fi
 jsbundle=$(mktemp -d /tmp/XXXXXX)/index.js
 
 npx --no esbuild src/index.ts \
-  --bundle --outfile="$jsbundle" --platform=node --target=node20
+  --bundle --outfile="$jsbundle" --platform=node --target=node24
 
 zip -j "$1" "$jsbundle"
