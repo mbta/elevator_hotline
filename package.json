@@ -11,10 +11,10 @@
   },
   "devDependencies": {
     "@eslint/js": "^9.36.0",
-    "@tsconfig/node20": "^20.1.6",
-    "@types/aws-lambda": "^8.10.152",
+    "@tsconfig/node20": "^20.1.9",
+    "@types/aws-lambda": "^8.10.160",
     "@types/jest": "^30.0.0",
-    "@types/node": "^20.19.18",
+    "@types/node": "^20.19.33",
     "aws-lambda-mock-context": "^3.2.1",
     "esbuild": "^0.25.10",
     "eslint-config-prettier": "^10.1.8",
@@ -23,7 +23,7 @@
     "prettier": "^3.6.2",
     "ts-jest": "^29.4.5",
     "tsx": "^4.20.6",
-    "typescript": "^5.9.2",
+    "typescript": "^5.9.3",
     "typescript-eslint": "^8.45.0"
   }
 }
