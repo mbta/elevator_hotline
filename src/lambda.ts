@@ -1,5 +1,4 @@
 import * as Sentry from "@sentry/node";
-import type { ConnectContactFlowEvent, Context } from "aws-lambda";
 import * as alerts from "./alerts";
 import * as routes from "./routes";
 
@@ -65,7 +64,7 @@ function compare_types(a: AlertWithExtras, b: AlertWithExtras) {
   }
 }
 
-const lambda = function (_event: ConnectContactFlowEvent, context: Context) {
+const lambda = async function () {
   const route_ids = [
     getLine("LINE_RED", "red"),
     getLine("LINE_ORANGE", "orange"),
@@ -83,102 +82,101 @@ const lambda = function (_event: ConnectContactFlowEvent, context: Context) {
     {} as Record<RouteId, Line>
   );
 
-  return alerts.get(config("API_KEY")).then((alertsResponse) => {
-    const requests = alertsResponse.entities.map((entity) =>
+  const alertsResponse = await alerts.get(config("API_KEY"));
+
+  const routesResponses = await Promise.all(
+    alertsResponse.entities.map((entity) =>
       routes.get(config("API_KEY"), entity)
-    );
+    )
+  );
 
-    return Promise.all(requests).then((requests) => {
-      const stops = requests.reduce(
-        (acc, response) => {
-          acc[response.stop] = {
-            name: response.name,
-            routes: Object.keys(
-              response.routes.reduce(
-                (acc, route) => {
-                  acc[routes_table[route]] = true;
-                  return acc;
-                },
-                {} as Record<Line, true>
-              )
-            ) as Line[],
-          };
-          return acc;
-        },
-        {} as Record<StopId, { name: string | null; routes: Line[] }>
-      );
-
-      const lines = alertsResponse.alerts.reduce(
-        (acc, alert: AlertWithExtras) => {
-          alert.station = alert.entities.find((entity) => {
-            if (stops[entity].routes.length != 0) {
-              return stops[entity].routes.some((route) => route in acc);
-            }
-            return false;
-          });
-
-          if (alert.station && stops[alert.station]) {
-            alert.name = stops[alert.station].name;
-            stops[alert.station].routes.map((route) => {
-              if (route in acc) {
-                acc[route].push(alert);
-              }
-            });
-          } else {
-            const message = "Alert for a station not in routes";
-            console.log(`Error: ${message} ${JSON.stringify(alert)}`);
-            Sentry.captureMessage(message, { extra: alert, level: "error" });
-          }
-
-          return acc;
-        },
-        {
-          red: [],
-          orange: [],
-          green: [],
-          blue: [],
-          silver: [],
-          commuter: [],
-        } as Record<Line, AlertWithExtras[]>
-      );
-
-      const output = {
-        status: "200",
-        red: defaultMessage("red line"),
-        orange: defaultMessage("orange line"),
-        green: defaultMessage("green line"),
-        blue: defaultMessage("blue line"),
-        silver: defaultMessage("silver line"),
-        commuter: defaultMessage("commuter rail"),
+  const stops = routesResponses.reduce(
+    (acc, response) => {
+      acc[response.stop] = {
+        name: response.name,
+        routes: Object.keys(
+          response.routes.reduce(
+            (acc, route) => {
+              acc[routes_table[route]] = true;
+              return acc;
+            },
+            {} as Record<Line, true>
+          )
+        ) as Line[],
       };
+      return acc;
+    },
+    {} as Record<StopId, { name: string | null; routes: Line[] }>
+  );
 
-      (Object.keys(lines) as Line[]).map((line) => {
-        lines[line].sort((a, b) => compare_types(a, b));
-
-        if (lines[line].length != 0) output[line] = "<speak>";
-
-        lines[line].map(
-          (alert) =>
-            (output[line] = [
-              output[line],
-              '<emphasis level="moderate"> ',
-              alert.name,
-              " </emphasis> ",
-              alert.lifecycle.toLowerCase(),
-              " ",
-              alert.type,
-              ' <break time="1s"/> ',
-              alert.description,
-            ].join(""))
-        );
-
-        if (lines[line].length != 0) output[line] = output[line] + " </speak>";
+  const lines = alertsResponse.alerts.reduce(
+    (acc, alert: AlertWithExtras) => {
+      alert.station = alert.entities.find((entity) => {
+        if (stops[entity].routes.length != 0) {
+          return stops[entity].routes.some((route) => route in acc);
+        }
+        return false;
       });
 
-      context.succeed(output);
-      return output;
-    });
+      if (alert.station && stops[alert.station]) {
+        alert.name = stops[alert.station].name;
+        stops[alert.station].routes.map((route) => {
+          if (route in acc) {
+            acc[route].push(alert);
+          }
+        });
+      } else {
+        const message = "Alert for a station not in routes";
+        console.log(`Error: ${message} ${JSON.stringify(alert)}`);
+        Sentry.captureMessage(message, { extra: alert, level: "error" });
+      }
+
+      return acc;
+    },
+    {
+      red: [],
+      orange: [],
+      green: [],
+      blue: [],
+      silver: [],
+      commuter: [],
+    } as Record<Line, AlertWithExtras[]>
+  );
+
+  const output = {
+    status: "200",
+    red: defaultMessage("red line"),
+    orange: defaultMessage("orange line"),
+    green: defaultMessage("green line"),
+    blue: defaultMessage("blue line"),
+    silver: defaultMessage("silver line"),
+    commuter: defaultMessage("commuter rail"),
+  };
+
+  (Object.keys(lines) as Line[]).forEach((line) => {
+    lines[line].sort((a, b) => compare_types(a, b));
+
+    if (lines[line].length != 0) output[line] = "<speak>";
+
+    lines[line].map(
+      (alert) =>
+        (output[line] = [
+          output[line],
+          '<emphasis level="moderate"> ',
+          alert.name,
+          " </emphasis> ",
+          alert.lifecycle.toLowerCase(),
+          " ",
+          alert.type,
+          ' <break time="1s"/> ',
+          alert.description,
+        ].join(""))
+    );
+
+    if (lines[line].length != 0) output[line] = output[line] + " </speak>";
   });
+
+  return output;
 };
 
 export default lambda;
