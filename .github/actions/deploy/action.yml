@@ -23,14 +23,9 @@ runs:
         aws-region: us-east-1
         role-to-assume: ${{ inputs.aws-role }}
 
-    - name: Package function
-      shell: bash
-      run: ./build.sh function.zip
-
-    - name: Update function code
+    - name: Run deploy script
       shell: bash
       run: |
-        aws lambda update-function-code \
-          --function-name elevator-hotline-${{ inputs.environment }} \
-          --zip-file fileb://function.zip \
-          ${{ inputs.dry-run && '--dry-run' || '' }}
+        scripts/deploy.sh \
+          ${{ inputs.dry-run && '-d' || '' }} \
+          ${{ inputs.environment }}
