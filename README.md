@@ -37,7 +37,10 @@ affected stations, returning a set of voice lines to Connect.
 - `npm run local`: Run the Lambda locally and print output
   - This requires filling in `API_KEY` in `.envrc` with a [V3 API key][api].
     Check [Notion][1p-secrets] for ways to do this securely, without storing the
-    key unencrypted.
+    key unencrypted
+- `scripts/deploy.sh dev`: Package the local code and deploy it to dev
+- `scripts/invoke.sh dev`: Invoke the dev Lambda and print the result
+  - Both of the above scripts require that you have `aws` CLI access set up
 
 [api]: https://api-v3.mbta.com/
 [1p-secrets]:
