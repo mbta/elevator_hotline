@@ -4,8 +4,10 @@ import lambda from "./lambda";
 import * as secret from "./secret";
 
 export const handler: ConnectContactFlowHandler = async () => {
-  const dsn = process.env.SENTRY_DSN;
-  Sentry.init({ dsn: dsn });
+  Sentry.init({
+    dsn: process.env.SENTRY_DSN,
+    environment: process.env.NODE_ENV,
+  });
 
   try {
     if (process.env.NODE_ENV !== "local") {
