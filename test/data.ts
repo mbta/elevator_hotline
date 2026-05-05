@@ -255,6 +255,7 @@ export const many_alerts_for_sort = function () {
               activities: ["USING_WHEELCHAIR"],
               facility: "404",
               stop: "nowhere",
+              route_type: null,
             },
             {
               activities: ["USING_WHEELCHAIR"],
