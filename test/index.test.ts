@@ -41,8 +41,6 @@ test("if http client gets no alerts responds all lines okay", async () => {
   jest.spyOn(api_client, "get").mockImplementation((url) => {
     if (url.pathname == "/alerts") {
       return Promise.resolve(data.no_alerts());
-    } else if (url.pathname == "/routes") {
-      return Promise.resolve(data.no_station());
     } else return Promise.reject();
   });
 
@@ -53,8 +51,16 @@ test("if http client gets a bus station alert, responds all lines okay", async (
   jest.spyOn(api_client, "get").mockImplementation((url) => {
     if (url.pathname == "/alerts") {
       return Promise.resolve(data.bus_station_alert());
-    } else if (url.pathname == "/routes") {
-      return Promise.resolve(data.no_station());
+    } else return Promise.reject();
+  });
+
+  expect(await call(handler)).toStrictEqual(no_outages);
+});
+
+test("filter out alerts with unsupported routes", async () => {
+  jest.spyOn(api_client, "get").mockImplementation((url) => {
+    if (url.pathname == "/alerts") {
+      return Promise.resolve(data.unsupported_route_alert());
     } else return Promise.reject();
   });
 
@@ -65,13 +71,6 @@ test("render one alert", async () => {
   jest.spyOn(api_client, "get").mockImplementation((url) => {
     if (url.pathname == "/alerts") {
       return Promise.resolve(data.one_alert());
-    } else if (url.pathname == "/routes") {
-      const route = url.searchParams.get("filter[stop]");
-      if (route == data.quincy_adams().included[0].id) {
-        return Promise.resolve(data.quincy_adams());
-      } else {
-        return Promise.resolve(data.no_station());
-      }
     } else return Promise.reject();
   });
 
@@ -89,14 +88,7 @@ test("render one alert", async () => {
 test("render one alert across multiple lines", async () => {
   jest.spyOn(api_client, "get").mockImplementation((url) => {
     if (url.pathname == "/alerts") {
-      return Promise.resolve(data.one_alert());
-    } else if (url.pathname == "/routes") {
-      const route = url.searchParams.get("filter[stop]");
-      if (route == data.north_station().included[0].id) {
-        return Promise.resolve(data.north_station());
-      } else {
-        return Promise.resolve(data.no_station());
-      }
+      return Promise.resolve(data.one_alert_multiple_lines());
     } else return Promise.reject();
   });
 
@@ -115,15 +107,6 @@ test("render multiple alerts across multiple lines", async () => {
   jest.spyOn(api_client, "get").mockImplementation((url) => {
     if (url.pathname == "/alerts") {
       return Promise.resolve(data.many_alerts());
-    } else if (url.pathname == "/routes") {
-      const route = url.searchParams.get("filter[stop]");
-      if (route == data.north_station().included[0].id) {
-        return Promise.resolve(data.north_station());
-      } else if (route == data.quincy_adams().included[0].id) {
-        return Promise.resolve(data.quincy_adams());
-      } else {
-        return Promise.resolve(data.no_station());
-      }
     } else return Promise.reject();
   });
 
@@ -142,57 +125,16 @@ test("only show alerts for elevator or escalator closure", async () => {
   jest.spyOn(api_client, "get").mockImplementation((url) => {
     if (url.pathname == "/alerts") {
       return Promise.resolve(data.not_alert());
-    } else if (url.pathname == "/routes") {
-      const route = url.searchParams.get("filter[stop]");
-      if (route == data.north_station().included[0].id) {
-        return Promise.resolve(data.north_station());
-      } else {
-        return Promise.resolve(data.no_station());
-      }
     } else return Promise.reject();
   });
 
   expect(await call(handler)).toStrictEqual(no_outages);
-});
-
-test("warn on unmatched alert, but still return correctly", async () => {
-  console.log = jest.fn();
-  jest.spyOn(api_client, "get").mockImplementation((url) => {
-    if (url.pathname == "/alerts") {
-      return Promise.resolve(data.unmatched_alert());
-    } else if (url.pathname == "/routes") {
-      const route = url.searchParams.get("filter[stop]");
-      if (route == data.north_station().included[0].id) {
-        return Promise.resolve(data.north_station());
-      } else {
-        return Promise.resolve(data.no_station());
-      }
-    } else return Promise.reject();
-  });
-
-  expect(await call(handler)).toStrictEqual(no_outages);
-  expect(console.log).toHaveBeenCalledWith(
-    'Error: Alert for a station not in routes {"id":"338974","type":"escalator closure","lifecycle":"ONGOING","description":"Example header. . example description <break time=\\"1s\\"/>","entities":["place-south"],"updatedAt":1575039547000}'
-  );
 });
 
 test("sorts multiple alerts across multiple lines correctly", async () => {
   jest.spyOn(api_client, "get").mockImplementation((url) => {
     if (url.pathname == "/alerts") {
       return Promise.resolve(data.many_alerts_for_sort());
-    } else if (url.pathname == "/routes") {
-      const route = url.searchParams.get("filter[stop]");
-      if (route == data.north_station().included[0].id) {
-        return Promise.resolve(data.north_station());
-      } else if (route == data.quincy_adams().included[0].id) {
-        return Promise.resolve(data.quincy_adams());
-      } else if (route == data.nowhere().included[0].id) {
-        return Promise.resolve(data.nowhere());
-      } else if (route == data.quincy_center().included[0].id) {
-        return Promise.resolve(data.quincy_center());
-      } else {
-        return Promise.resolve(data.no_station());
-      }
     } else return Promise.reject();
   });
 

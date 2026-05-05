@@ -1,4 +1,3 @@
-import * as Sentry from "@sentry/node";
 import { Alert, get as getAlerts } from "./alerts";
 
 type Line = "red" | "orange" | "green" | "blue" | "silver" | "commuter";
@@ -10,14 +9,6 @@ type AlertWithStopName = Alert & {
 
 function config(item: string) {
   return process.env[item]!;
-}
-
-function getLine(line: string, line_id: Line) {
-  return config(line)
-    .split(",")
-    .map((item) => {
-      return { line: item.trim(), id: line_id };
-    });
 }
 
 function defaultMessage(line: string) {
@@ -62,32 +53,17 @@ function compare_types(a: Alert, b: Alert) {
 }
 
 const lambda = async function () {
-  const route_ids = [
-    getLine("LINE_RED", "red"),
-    getLine("LINE_ORANGE", "orange"),
-    getLine("LINE_GREEN", "green"),
-    getLine("LINE_BLUE", "blue"),
-    getLine("LINE_SILVER", "silver"),
-    getLine("LINE_COMMUTER", "commuter"),
-  ].reduce((acc, val) => [...acc, ...val], []);
-
-  const routes_table = route_ids.reduce(
-    (acc, route) => {
-      acc[route.line] = route.id;
-      return acc;
-    },
-    {} as Record<RouteId, Line>
-  );
-
   const alertsResponse = await getAlerts(config("API_KEY"));
 
-  const lines = alertsResponse.alerts.reduce(
-    (acc, alert: AlertWithStopName) => {        
-      alert.entities.map((entity) => {
-          alert.stop_name = entity.stop_name;
-            acc[entity.route].push(alert);
-
-    })
+  const alertsByLine = alertsResponse.reduce(
+    (acc, alert: Alert) => {
+      alert.entities.forEach((entity) => {
+        const alertWithStop: AlertWithStopName = {
+          ...alert,
+          stop_name: entity.stop_name,
+        };
+        acc[entity.line].push(alertWithStop);
+      });
 
       return acc;
     },
@@ -111,12 +87,12 @@ const lambda = async function () {
     commuter: defaultMessage("commuter rail"),
   };
 
-  (Object.keys(lines) as Line[]).forEach((line) => {
-    lines[line].sort((a, b) => compare_types(a, b));
+  (Object.keys(alertsByLine) as Line[]).forEach((line) => {
+    alertsByLine[line].sort((a, b) => compare_types(a, b));
 
-    if (lines[line].length != 0) output[line] = "<speak>";
+    if (alertsByLine[line].length !== 0) output[line] = "<speak>";
 
-    lines[line].map(
+    alertsByLine[line].map(
       (alert) =>
         (output[line] = [
           output[line],
@@ -131,7 +107,8 @@ const lambda = async function () {
         ].join(""))
     );
 
-    if (lines[line].length != 0) output[line] = output[line] + " </speak>";
+    if (alertsByLine[line].length !== 0)
+      output[line] = output[line] + " </speak>";
   });
 
   return output;
