@@ -15,11 +15,13 @@ function cleanUpText(input: string) {
     .replace(/\r\n/g, ' <break time="1s"/> ');
 }
 
+type RouteType = number | null;
+
 type APIAlertAttributes = {
   description: string | null;
   effect: string;
   header: string;
-  informed_entity: { stop: string | null; route_type?: number }[];
+  informed_entity: { stop: string | null; route_type: RouteType }[];
   lifecycle: string;
   updated_at: string;
 };
@@ -41,7 +43,7 @@ type Response = {
 };
 
 // Only capture alerts for CR, subway, or light rail
-const valid_route_types = [0, 1, 2];
+const validRouteTypes: RouteType[] = [0, 1, 2];
 
 export const get = (apiKey: string): Promise<Response> => {
   const url = new URL("/alerts", client.base());
@@ -51,6 +53,7 @@ export const get = (apiKey: string): Promise<Response> => {
   );
   url.searchParams.append("fields[activity]", "ALL");
   url.searchParams.append("api_key", apiKey);
+
   return client.get(url).then((response) => {
     const alert_entities: Record<string, null> = {};
 
@@ -74,9 +77,7 @@ export const get = (apiKey: string): Promise<Response> => {
         const entities = Array.from(
           new Set(
             attributes.informed_entity
-              .filter((entity) =>
-                valid_route_types.includes(entity.route_type!)
-              )
+              .filter((entity) => validRouteTypes.includes(entity.route_type))
               .map((entity) => {
                 alert_entities[entity.stop!] = null;
                 return entity.stop!;
