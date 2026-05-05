@@ -1,14 +1,11 @@
 import * as Sentry from "@sentry/node";
-import * as alerts from "./alerts";
-import * as routes from "./routes";
+import { Alert, get as getAlerts } from "./alerts";
 
 type Line = "red" | "orange" | "green" | "blue" | "silver" | "commuter";
 type RouteId = string;
-type StopId = string;
 
-type AlertWithExtras = alerts.Alert & {
-  name?: string | null;
-  station?: string;
+type AlertWithStopName = Alert & {
+  stop_name?: string | null;
 };
 
 function config(item: string) {
@@ -42,7 +39,7 @@ function type_order(type: string) {
   return 0;
 }
 
-function compare_types(a: AlertWithExtras, b: AlertWithExtras) {
+function compare_types(a: Alert, b: Alert) {
   if (type_order(a.type) > type_order(b.type)) {
     return -1;
   } else if (type_order(a.type) < type_order(b.type)) {
@@ -82,54 +79,15 @@ const lambda = async function () {
     {} as Record<RouteId, Line>
   );
 
-  const alertsResponse = await alerts.get(config("API_KEY"));
-
-  const routesResponses = await Promise.all(
-    alertsResponse.entities.map((entity) =>
-      routes.get(config("API_KEY"), entity)
-    )
-  );
-
-  const stops = routesResponses.reduce(
-    (acc, response) => {
-      acc[response.stop] = {
-        name: response.name,
-        routes: Object.keys(
-          response.routes.reduce(
-            (acc, route) => {
-              acc[routes_table[route]] = true;
-              return acc;
-            },
-            {} as Record<Line, true>
-          )
-        ) as Line[],
-      };
-      return acc;
-    },
-    {} as Record<StopId, { name: string | null; routes: Line[] }>
-  );
+  const alertsResponse = await getAlerts(config("API_KEY"));
 
   const lines = alertsResponse.alerts.reduce(
-    (acc, alert: AlertWithExtras) => {
-      alert.station = alert.entities.find((entity) => {
-        if (stops[entity].routes.length != 0) {
-          return stops[entity].routes.some((route) => route in acc);
-        }
-        return false;
-      });
+    (acc, alert: AlertWithStopName) => {        
+      alert.entities.map((entity) => {
+          alert.stop_name = entity.stop_name;
+            acc[entity.route].push(alert);
 
-      if (alert.station && stops[alert.station]) {
-        alert.name = stops[alert.station].name;
-        stops[alert.station].routes.map((route) => {
-          if (route in acc) {
-            acc[route].push(alert);
-          }
-        });
-      } else {
-        const message = "Alert for a station not in routes";
-        console.log(`Error: ${message} ${JSON.stringify(alert)}`);
-        Sentry.captureMessage(message, { extra: alert, level: "error" });
-      }
+    })
 
       return acc;
     },
@@ -140,7 +98,7 @@ const lambda = async function () {
       blue: [],
       silver: [],
       commuter: [],
-    } as Record<Line, AlertWithExtras[]>
+    } as Record<Line, AlertWithStopName[]>
   );
 
   const output = {
@@ -163,7 +121,7 @@ const lambda = async function () {
         (output[line] = [
           output[line],
           '<emphasis level="moderate"> ',
-          alert.name,
+          alert.stop_name,
           " </emphasis> ",
           alert.lifecycle.toLowerCase(),
           " ",

@@ -21,7 +21,7 @@ type APIAlertAttributes = {
   description: string | null;
   effect: string;
   header: string;
-  informed_entity: { stop: string | null; route_type: RouteType }[];
+  informed_entity: { stop: string | null; route_type: RouteType, route: string | null}[];
   lifecycle: string;
   updated_at: string;
 };
@@ -33,17 +33,51 @@ export type Alert = {
   type: string;
   lifecycle: string;
   description: string;
-  entities: StopId[];
+  entities: Entity[];
   updatedAt: number;
 };
 
+type Entity = {
+  stop_name: string;
+  route: Line;
+}
+
 type Response = {
   alerts: Alert[];
-  entities: StopId[];
 };
 
-// Only capture alerts for CR, subway, or light rail
-const validRouteTypes: RouteType[] = [0, 1, 2];
+
+type RouteId = string;
+type Line = "red" | "orange" | "green" | "blue" | "silver" | "commuter";
+
+function config(item: string) {
+  return process.env[item]!;
+}
+
+function getLine(line: string, line_id: Line) {
+  return config(line)
+    .split(",")
+    .map((item) => {
+      return { line: item.trim(), id: line_id };
+    });
+}  const route_ids = [
+    getLine("LINE_RED", "red"),
+    getLine("LINE_ORANGE", "orange"),
+    getLine("LINE_GREEN", "green"),
+    getLine("LINE_BLUE", "blue"),
+    getLine("LINE_SILVER", "silver"),
+    getLine("LINE_COMMUTER", "commuter"),
+  ].reduce((acc, val) => [...acc, ...val], []);
+
+
+  const routes_table = route_ids.reduce(
+    (acc, route) => {
+      acc[route.line] = route.id;
+      return acc;
+    },
+    {} as Record<RouteId, Line>
+  );
+
 
 export const get = (apiKey: string): Promise<Response> => {
   const url = new URL("/alerts", client.base());
@@ -51,12 +85,20 @@ export const get = (apiKey: string): Promise<Response> => {
     "fields[alert]",
     "updated_at,effect,description,header,informed_entity,lifecycle"
   );
-  url.searchParams.append("fields[activity]", "ALL");
+  url.searchParams.append("fields[route]", "id");
+  url.searchParams.append("include", "stops");
   url.searchParams.append("api_key", apiKey);
 
   return client.get(url).then((response) => {
-    const alert_entities: Record<string, null> = {};
-
+    const stops = response.included!.filter((included) => included.type == "stop").reduce(
+    (acc, stop) => {
+      if ((stop.attributes.location_type === 1) && stop.attributes.name) {
+        acc[stop.id] = stop.attributes.name as string | null;
+      }
+      return acc;
+    },
+    {} as Record<StopId, string | null>
+  );
     const alerts = response.data
       .filter((alert) => {
         return (
@@ -74,31 +116,32 @@ export const get = (apiKey: string): Promise<Response> => {
           '<break time="1s"/>',
         ].join(" ");
 
-        const entities = Array.from(
-          new Set(
-            attributes.informed_entity
-              .filter((entity) => validRouteTypes.includes(entity.route_type))
-              .map((entity) => {
-                alert_entities[entity.stop!] = null;
-                return entity.stop!;
-              })
-          )
-        );
+        const entityMap = new Map<string, Entity>();
+        attributes.informed_entity
+          .forEach((entity) => {
+            const stopName = stops[entity.stop!];
+            const line = routes_table[entity.route!];
+            const key = `${stopName}-${line!}`;
+            if (stopName && line && !entityMap.has(key)) {
+              console.log( { stop_name: stopName!, route: entity.route!, stop_id: entity.stop!, route_type: entity.route_type! });
+              entityMap.set(key, { stop_name: stopName!, route: line });
+            }
+          });
+        const alert_entities = Array.from(entityMap.values());
 
+        console.log(entityMap);
         return {
           id: alert.id,
           type: attributes.effect.toLowerCase().replace("_", " "),
           lifecycle: attributes.lifecycle,
           description: description,
-          entities: entities,
+          entities: alert_entities,
           updatedAt: new Date(attributes.updated_at).getTime(),
         };
       })
       .filter((alert) => alert.entities.length > 0);
-
     return {
       alerts: alerts,
-      entities: Object.keys(alert_entities),
     };
   });
 };
