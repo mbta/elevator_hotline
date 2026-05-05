@@ -1,7 +1,5 @@
 import { Alert, get as getAlerts } from "./alerts";
-
-type Line = "red" | "orange" | "green" | "blue" | "silver" | "commuter";
-type RouteId = string;
+import { Line } from "./routes";
 
 type AlertWithStopName = Alert & {
   stop_name?: string | null;
