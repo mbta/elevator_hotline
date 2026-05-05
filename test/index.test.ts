@@ -49,6 +49,18 @@ test("if http client gets no alerts responds all lines okay", async () => {
   expect(await call(handler)).toStrictEqual(no_outages);
 });
 
+test("if http client gets a bus station alert, responds all lines okay", async () => {
+  jest.spyOn(api_client, "get").mockImplementation((url) => {
+    if (url.pathname == "/alerts") {
+      return Promise.resolve(data.bus_station_alert());
+    } else if (url.pathname == "/routes") {
+      return Promise.resolve(data.no_station());
+    } else return Promise.reject();
+  });
+
+  expect(await call(handler)).toStrictEqual(no_outages);
+});
+
 test("render one alert", async () => {
   jest.spyOn(api_client, "get").mockImplementation((url) => {
     if (url.pathname == "/alerts") {
