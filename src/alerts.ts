@@ -19,7 +19,7 @@ type APIAlertAttributes = {
   description: string | null;
   effect: string;
   header: string;
-  informed_entity: { stop: string | null }[];
+  informed_entity: { stop: string | null; route_type?: number }[];
   lifecycle: string;
   updated_at: string;
 };
@@ -40,6 +40,9 @@ type Response = {
   entities: StopId[];
 };
 
+// Only capture alerts for CR, subway, or light rail
+const valid_route_types = [0, 1, 2];
+
 export const get = (apiKey: string): Promise<Response> => {
   const url = new URL("/alerts", client.base());
   url.searchParams.append(
@@ -48,7 +51,6 @@ export const get = (apiKey: string): Promise<Response> => {
   );
   url.searchParams.append("fields[activity]", "ALL");
   url.searchParams.append("api_key", apiKey);
-
   return client.get(url).then((response) => {
     const alert_entities: Record<string, null> = {};
 
@@ -69,10 +71,18 @@ export const get = (apiKey: string): Promise<Response> => {
           '<break time="1s"/>',
         ].join(" ");
 
-        const entities = attributes.informed_entity.map((entity) => {
-          alert_entities[entity.stop!] = null;
-          return entity.stop!;
-        });
+        const entities = Array.from(
+          new Set(
+            attributes.informed_entity
+              .filter((entity) =>
+                valid_route_types.includes(entity.route_type!)
+              )
+              .map((entity) => {
+                alert_entities[entity.stop!] = null;
+                return entity.stop!;
+              })
+          )
+        );
 
         return {
           id: alert.id,
@@ -82,7 +92,8 @@ export const get = (apiKey: string): Promise<Response> => {
           entities: entities,
           updatedAt: new Date(attributes.updated_at).getTime(),
         };
-      });
+      })
+      .filter((alert) => alert.entities.length > 0);
 
     return {
       alerts: alerts,
