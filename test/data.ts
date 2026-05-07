@@ -1,6 +1,7 @@
 export const no_alerts = function () {
   return {
     data: [],
+    included: [],
     jsonapi: {
       version: "1.0",
     },
@@ -28,14 +29,8 @@ export const one_alert = function () {
             {
               activities: ["USING_WHEELCHAIR"],
               facility: "850",
-              stop: "70104",
-              route_type: 1,
-            },
-            {
-              activities: ["USING_WHEELCHAIR"],
-              facility: "850",
-              stop: "place-north",
-              route_type: 1,
+              stop: "place-qamnl",
+              route: "Red",
             },
           ],
           lifecycle: "ONGOING",
@@ -51,6 +46,78 @@ export const one_alert = function () {
           self: "/alerts/338973",
         },
         type: "alert",
+      },
+    ],
+    included: [
+      {
+        attributes: {
+          name: "Quincy Adams",
+          location_type: 1,
+        },
+        id: "place-qamnl",
+        type: "stop",
+      },
+    ],
+    jsonapi: {
+      version: "1.0",
+    },
+  };
+};
+
+export const one_alert_multiple_lines = function () {
+  return {
+    data: [
+      {
+        attributes: {
+          active_period: [
+            {
+              end: null,
+              start: "2019-11-12T04:30:00-05:00",
+            },
+          ],
+          banner: null,
+          cause: "UNKNOWN_CAUSE",
+          created_at: "2019-10-21T16:59:16-04:00",
+          description: "example description",
+          effect: "ELEVATOR_CLOSURE",
+          header: "Example header.",
+          informed_entity: [
+            {
+              activities: ["USING_WHEELCHAIR"],
+              facility: "850",
+              stop: "place-north",
+              route: "Orange",
+            },
+            {
+              activities: ["USING_WHEELCHAIR"],
+              facility: "850",
+              stop: "place-north",
+              route: "Green-C",
+            },
+          ],
+          lifecycle: "ONGOING",
+          service_effect: "elevator unavailable",
+          severity: 1,
+          short_header: "short header.",
+          timeframe: "ongoing",
+          updated_at: "2019-11-29T09:59:07-05:00",
+          url: null,
+        },
+        id: "338973",
+        links: {
+          self: "/alerts/338973",
+        },
+        type: "alert",
+      },
+    ],
+    included: [
+      {
+        attributes: {
+          name: "North Station",
+          location_type: 1,
+        },
+        id: "place-north",
+        type: "stop",
       },
     ],
     jsonapi: {
@@ -81,7 +148,7 @@ export const not_alert = function () {
               activities: ["USING_WHEELCHAIR"],
               facility: "850",
               stop: "place-north",
-              route_type: 0,
+              route: "Orange",
             },
           ],
           lifecycle: "ONGOING",
@@ -97,6 +164,16 @@ export const not_alert = function () {
           self: "/alerts/338973",
         },
         type: "alert",
+      },
+    ],
+    included: [
+      {
+        attributes: {
+          name: "North Station",
+          location_type: 1,
+        },
+        id: "place-north",
+        type: "stop",
       },
     ],
     jsonapi: {
@@ -127,7 +204,7 @@ export const unmatched_alert = function () {
               activities: ["USING_WHEELCHAIR"],
               facility: "852",
               stop: "place-south",
-              route_type: 0,
+              route: null,
             },
           ],
           lifecycle: "ONGOING",
@@ -143,6 +220,16 @@ export const unmatched_alert = function () {
           self: "/alerts/338973",
         },
         type: "alert",
+      },
+    ],
+    included: [
+      {
+        attributes: {
+          name: "South Station",
+          location_type: 1,
+        },
+        id: "place-south",
+        type: "stop",
       },
     ],
     jsonapi: {
@@ -173,7 +260,13 @@ export const many_alerts = function () {
               activities: ["USING_WHEELCHAIR"],
               facility: "850",
               stop: "place-north",
-              route_type: 0,
+              route: "Orange",
+            },
+            {
+              activities: ["USING_WHEELCHAIR"],
+              facility: "850",
+              stop: "place-north",
+              route: "Green-C",
             },
           ],
           lifecycle: "ONGOING",
@@ -208,8 +301,8 @@ export const many_alerts = function () {
             {
               activities: ["USING_WHEELCHAIR"],
               facility: "850",
-              stop: "70104",
-              route_type: 0,
+              stop: "place-qamnl",
+              route: "Red",
             },
           ],
           lifecycle: "ONGOING",
@@ -225,6 +318,24 @@ export const many_alerts = function () {
           self: "/alerts/338973",
         },
         type: "alert",
+      },
+    ],
+    included: [
+      {
+        attributes: {
+          name: "North Station",
+          location_type: 1,
+        },
+        id: "place-north",
+        type: "stop",
+      },
+      {
+        attributes: {
+          name: "Quincy Adams",
+          location_type: 1,
+        },
+        id: "place-qamnl",
+        type: "stop",
       },
     ],
     jsonapi: {
@@ -255,13 +366,19 @@ export const many_alerts_for_sort = function () {
               activities: ["USING_WHEELCHAIR"],
               facility: "404",
               stop: "nowhere",
-              route_type: null,
+              route: null,
             },
             {
               activities: ["USING_WHEELCHAIR"],
               facility: "850",
               stop: "place-north",
-              route_type: 0,
+              route: "Orange",
+            },
+            {
+              activities: ["USING_WHEELCHAIR"],
+              facility: "850",
+              stop: "place-north",
+              route: "Green-C",
             },
           ],
           lifecycle: "NEW",
@@ -297,7 +414,13 @@ export const many_alerts_for_sort = function () {
               activities: ["USING_WHEELCHAIR"],
               facility: "850",
               stop: "place-north",
-              route_type: 0,
+              route: "Orange",
+            },
+            {
+              activities: ["USING_WHEELCHAIR"],
+              facility: "850",
+              stop: "place-north",
+              route: "Green-C",
             },
           ],
           lifecycle: "ONGOING",
@@ -332,8 +455,8 @@ export const many_alerts_for_sort = function () {
             {
               activities: ["USING_WHEELCHAIR"],
               facility: "850",
-              stop: "70104",
-              route_type: 0,
+              stop: "place-qamnl",
+              route: "Red",
             },
           ],
           lifecycle: "ONGOING",
@@ -368,8 +491,8 @@ export const many_alerts_for_sort = function () {
             {
               activities: ["USING_WHEELCHAIR"],
               facility: "850",
-              stop: "70104",
-              route_type: 0,
+              stop: "place-qamnl",
+              route: "Red",
             },
           ],
           lifecycle: "ONGOING",
@@ -404,8 +527,8 @@ export const many_alerts_for_sort = function () {
             {
               activities: ["USING_WHEELCHAIR"],
               facility: "850",
-              stop: "70105",
-              route_type: 0,
+              stop: "place-qnctr",
+              route: "Red",
             },
           ],
           lifecycle: "ONGOING_UPCOMING",
@@ -440,8 +563,8 @@ export const many_alerts_for_sort = function () {
             {
               activities: ["USING_WHEELCHAIR"],
               facility: "850",
-              stop: "70105",
-              route_type: 0,
+              stop: "place-qnctr",
+              route: "Red",
             },
           ],
           lifecycle: "ONGOING_UPCOMING",
@@ -457,6 +580,32 @@ export const many_alerts_for_sort = function () {
           self: "/alerts/338973",
         },
         type: "alert",
+      },
+    ],
+    included: [
+      {
+        attributes: {
+          name: "North Station",
+          location_type: 1,
+        },
+        id: "place-north",
+        type: "stop",
+      },
+      {
+        attributes: {
+          name: "Quincy Adams",
+          location_type: 1,
+        },
+        id: "place-qamnl",
+        type: "stop",
+      },
+      {
+        attributes: {
+          name: "Quincy Center",
+          location_type: 1,
+        },
+        id: "place-qnctr",
+        type: "stop",
       },
     ],
     jsonapi: {
@@ -487,7 +636,7 @@ export const bus_station_alert = function () {
               activities: ["USING_WHEELCHAIR"],
               facility: "850",
               stop: "place-ER-0115",
-              route_type: 3,
+              route: "1",
             },
           ],
           lifecycle: "ONGOING",
@@ -503,6 +652,72 @@ export const bus_station_alert = function () {
           self: "/alerts/1007380",
         },
         type: "alert",
+      },
+    ],
+    included: [
+      {
+        attributes: {
+          name: "Lynn Commuter Rail",
+          location_type: 1,
+        },
+        id: "place-ER-0115",
+        type: "stop",
+      },
+    ],
+    jsonapi: {
+      version: "1.0",
+    },
+  };
+};
+
+export const unsupported_route_alert = function () {
+  return {
+    data: [
+      {
+        attributes: {
+          active_period: [
+            {
+              end: null,
+              start: "2019-11-12T04:30:00-05:00",
+            },
+          ],
+          banner: null,
+          cause: "UNKNOWN_CAUSE",
+          created_at: "2019-10-21T16:59:16-04:00",
+          description: "example description",
+          effect: "ELEVATOR_CLOSURE",
+          header: "Example header.",
+          informed_entity: [
+            {
+              activities: ["USING_WHEELCHAIR"],
+              facility: "850",
+              stop: "place-harsq",
+              route: "66",
+            },
+          ],
+          lifecycle: "ONGOING",
+          service_effect: "elevator unavailable",
+          severity: 1,
+          short_header: "short header.",
+          timeframe: "ongoing",
+          updated_at: "2019-11-29T09:59:07-05:00",
+          url: null,
+        },
+        id: "999999",
+        links: {
+          self: "/alerts/999999",
+        },
+        type: "alert",
+      },
+    ],
+    included: [
+      {
+        attributes: {
+          name: "Harvard",
+          location_type: 1,
+        },
+        id: "place-harsq",
+        type: "stop",
       },
     ],
     jsonapi: {

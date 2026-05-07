@@ -1,26 +1,30 @@
-import * as client from "./api_client";
+export type Line = "red" | "orange" | "green" | "blue" | "silver" | "commuter";
+type RouteId = string;
 
-type Response = { stop: string; name: string | null; routes: string[] };
+function config(item: string) {
+  return process.env[item]!;
+}
 
-export const get = (apiKey: string, stop: string): Promise<Response> => {
-  const url = new URL("/routes", client.base());
-  url.searchParams.append("fields[route]", "id");
-  url.searchParams.append("fields[stop]", "name");
-  url.searchParams.append("filter[stop]", stop);
-  url.searchParams.append("include", "stop");
-  url.searchParams.append("api_key", apiKey);
+function getLine(line: string, line_id: Line) {
+  return config(line)
+    .split(",")
+    .map((item) => {
+      return { line: item.trim(), id: line_id };
+    });
+}
+const routeIds = [
+  getLine("LINE_RED", "red"),
+  getLine("LINE_ORANGE", "orange"),
+  getLine("LINE_GREEN", "green"),
+  getLine("LINE_BLUE", "blue"),
+  getLine("LINE_SILVER", "silver"),
+  getLine("LINE_COMMUTER", "commuter"),
+].reduce((acc, val) => [...acc, ...val], []);
 
-  return client.get(url).then((response) => {
-    let station = null;
-
-    if (response.included && response.included.length != 0) {
-      station = response.included.map(
-        (included) => included.attributes.name as string
-      )[0];
-    }
-
-    const allRoutes = response.data.map((route) => route.id);
-
-    return { stop: stop, name: station, routes: allRoutes };
-  });
-};
+export const routesToLine = routeIds.reduce(
+  (acc: Record<RouteId, Line>, route) => {
+    acc[route.line] = route.id;
+    return acc;
+  },
+  {} as Record<RouteId, Line>
+);
