@@ -47,14 +47,17 @@ export const get = (apiKey: string): Promise<Alert[]> => {
   return client.get(url).then((response) => {
     // Map parent station IDs to stop name to use when rendering alerts
     const stopsToName = response.included
-      ? response
-          .included!.filter((included) => included.type == "stop")
-          .reduce((acc, stop) => {
-            if (stop.attributes.location_type === 1 && stop.attributes.name) {
-              acc[stop.id] = stop.attributes.name as string;
+      ? response.included
+          .filter((included) => included.type == "stop")
+          .reduce((acc: StopToName, stop) => {
+            if (
+              stop.attributes.location_type === 1 &&
+              typeof stop.attributes.name === "string"
+            ) {
+              acc[stop.id] = stop.attributes.name;
             }
             return acc;
-          }, {} as StopToName)
+          }, {})
       : {};
 
     return response.data
@@ -79,7 +82,7 @@ export const get = (apiKey: string): Promise<Alert[]> => {
           const line = routesToLine[entity.route!];
           const key = `${stopName}-${line}`;
           if (stopName && line && !entityMap.has(key)) {
-            entityMap.set(key, { stop_name: stopName!, line: line });
+            entityMap.set(key, { stop_name: stopName, line: line });
           }
         });
 

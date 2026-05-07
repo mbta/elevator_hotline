@@ -22,7 +22,7 @@ const routeIds = [
 ].reduce((acc, val) => [...acc, ...val], []);
 
 export const routesToLine = routeIds.reduce(
-  (acc, route) => {
+  (acc: Record<RouteId, Line>, route) => {
     acc[route.line] = route.id;
     return acc;
   },
