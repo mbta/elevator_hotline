@@ -13,7 +13,6 @@
     "@eslint/js": "^10.0.1",
     "@tsconfig/node24": "^24.0.4",
     "@types/aws-lambda": "^8.10.161",
-    "@types/jest": "^30.0.0",
     "@types/node": "^24.11.2",
     "esbuild": "^0.28.0",
     "eslint-config-prettier": "^10.1.8",
@@ -23,7 +22,7 @@
     "prettier": "^3.8.3",
     "ts-jest": "^29.4.9",
     "tsx": "^4.21.0",
-    "typescript": "^5.9.3",
+    "typescript": "^6.0.3",
     "typescript-eslint": "^8.59.1"
   }
 }
