@@ -6,8 +6,8 @@
     "test": "jest"
   },
   "dependencies": {
-    "@aws-sdk/client-secrets-manager": "^3.1045.0",
-    "@sentry/node": "^10.52.0"
+    "@aws-sdk/client-secrets-manager": "^3.1053.0",
+    "@sentry/node": "^10.54.0"
   },
   "devDependencies": {
     "@eslint/js": "^10.0.1",
@@ -21,7 +21,7 @@
     "jest": "^30.4.2",
     "prettier": "^3.8.3",
     "ts-jest": "^29.4.11",
-    "tsx": "^4.21.0",
+    "tsx": "^4.22.3",
     "typescript": "^6.0.3",
     "typescript-eslint": "^8.60.0"
   }
