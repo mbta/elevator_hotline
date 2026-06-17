@@ -2,6 +2,7 @@
   "extends": "@tsconfig/node24",
   "compilerOptions": {
     "isolatedModules": true,
-    "noEmit": true
+    "noEmit": true,
+    "types": ["node"]
   }
 }
