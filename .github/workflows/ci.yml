@@ -62,4 +62,4 @@ jobs:
     steps:
       - uses: actions/checkout@v6.0.3
       - uses: ./.github/actions/setup
-      - run: npx --no tsc
+      - run: npx --no tsc -- --version &&  npx --no tsc
