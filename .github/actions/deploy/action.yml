@@ -18,7 +18,7 @@ runs:
   steps:
     - uses: ./.github/actions/setup
 
-    - uses: aws-actions/configure-aws-credentials@v6.2.1
+    - uses: aws-actions/configure-aws-credentials@6.2.2
       with:
         aws-region: us-east-1
         role-to-assume: ${{ inputs.aws-role }}
