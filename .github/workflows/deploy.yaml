@@ -29,5 +29,5 @@ jobs:
           persist-credentials: false
       - uses: ./.github/actions/deploy
         with:
-          aws-role: ${{ secrets.AWS_ROLE_ARN }}
+          aws-role: ${{ secrets.AWS_ROLE_ARN }} # zizmor: ignore[secrets-outside-env] - TODO: Move to a dedicated environment
           environment: ${{ inputs.environment || 'dev' }}
