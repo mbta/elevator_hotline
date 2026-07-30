@@ -3,13 +3,13 @@ description: Sets up and caches ASDF tools and dependencies
 runs:
   using: composite
   steps:
-    - uses: actions/cache@v6.1.0
+    - uses: actions/cache@55cc8345863c7cc4c66a329aec7e433d2d1c52a9 # v6.1.0
       id: asdf-cache
       with:
         path: ~/.asdf
         key: asdf-${{ hashFiles('.tool-versions') }}
 
-    - uses: asdf-vm/actions/install@v4
+    - uses: asdf-vm/actions/install@b7bcd026f18772e44fe1026d729e1611cc435d47 # v4.0.1
       if: steps.asdf-cache.outputs.cache-hit != 'true'
 
     - name: Setup ASDF environment
@@ -23,7 +23,7 @@ runs:
       run: asdf reshim
       if: steps.asdf-cache.outputs.cache-hit == 'true'
 
-    - uses: actions/cache@v6.1.0
+    - uses: actions/cache@55cc8345863c7cc4c66a329aec7e433d2d1c52a9 # v6.1.0
       id: deps-cache
       with:
         path: node_modules

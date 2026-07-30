@@ -27,5 +27,8 @@ runs:
       shell: bash
       run: |
         scripts/deploy.sh \
-          ${{ inputs.dry-run && '-d' || '' }} \
-          ${{ inputs.environment }}
+          ${INPUTS_DRY_RUN:+-d} \
+          ${INPUTS_ENVIRONMENT}
+      env:
+        INPUTS_DRY_RUN: ${{ inputs.dry-run }}
+        INPUTS_ENVIRONMENT: ${{ inputs.environment }}
