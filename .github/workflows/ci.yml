@@ -28,7 +28,7 @@ jobs:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
           persist-credentials: false
-      - uses: ./.github/actions/deploy
+      - uses: $/.github/actions/deploy
         with:
           aws-role: ${{ secrets.AWS_ROLE_ARN }} # zizmor: ignore[secrets-outside-env] - TODO: Move to a dedicated environment
           dry-run: "true"
@@ -41,7 +41,7 @@ jobs:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
           persist-credentials: false
-      - uses: ./.github/actions/setup
+      - uses: $/.github/actions/setup
       - run: npx --no prettier --check .
 
   lint:
@@ -51,7 +51,7 @@ jobs:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
           persist-credentials: false
-      - uses: ./.github/actions/setup
+      - uses: $/.github/actions/setup
       - run: npx --no eslint .
 
   test:
@@ -61,7 +61,7 @@ jobs:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
           persist-credentials: false
-      - uses: ./.github/actions/setup
+      - uses: $/.github/actions/setup
       - run: |
           source .envrc.template
           npm test
@@ -73,5 +73,5 @@ jobs:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
           persist-credentials: false
-      - uses: ./.github/actions/setup
+      - uses: $/.github/actions/setup
       - run: npx --no tsc
