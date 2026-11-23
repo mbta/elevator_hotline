@@ -6,12 +6,12 @@
     "test": "jest"
   },
   "dependencies": {
-    "@aws-sdk/client-secrets-manager": "^3.1164.0",
+    "@aws-sdk/client-secrets-manager": "^3.1169.0",
     "@sentry/node": "^10.75.0"
   },
   "devDependencies": {
     "@eslint/js": "^10.0.1",
-    "@tsconfig/node24": "^24.0.5",
+    "@tsconfig/node24": "^24.0.6",
     "@types/aws-lambda": "^8.10.164",
     "@types/node": "^24.11.2",
     "esbuild": "^0.28.2",
@@ -19,7 +19,7 @@
     "eslint-plugin-jest": "^29.17.1",
     "globals": "^17.14.0",
     "jest": "^30.5.2",
-    "prettier": "^3.9.10",
+    "prettier": "^3.10.1",
     "ts-jest": "^29.4.15",
     "tsx": "^4.23.15",
     "typescript": "^6.0.3",
