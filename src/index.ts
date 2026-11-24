@@ -29,6 +29,7 @@ export const handler: ConnectContactFlowHandler = async () => {
       );
     }
 
+    throw new Error("Testing an error");
     return await lambda();
   } catch (error) {
     console.log("Error: " + error);
